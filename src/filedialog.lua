@@ -1,6 +1,6 @@
 local filedialog = {}
 
-local nfd = require 'nfd'
+local nfd = require("nfd")
 
 function filedialog.open()
     local r = nfd.open("p8")

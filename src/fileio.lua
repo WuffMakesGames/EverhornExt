@@ -52,7 +52,7 @@ function loadpico8(filename)
         end
     end
     file:close()
-    local p8font=love.image.newImageData("pico-8_font.png")
+    local p8font=love.image.newImageData("assets/pico-8_font.png")
     local function toGrey(x,y,r,g,b,a)
         return r*194/255,g*195/255,b*199/255,a
     end

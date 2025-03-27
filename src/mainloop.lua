@@ -80,14 +80,14 @@ function love.load(args)
     newProject()
     pushHistory()
 
-    checkmarkIm=love.graphics.newImage("checkmark.png")
+    checkmarkIm=love.graphics.newImage("assets/checkmark.png")
     checkmarkWithBg=love.graphics.newCanvas(checkmarkIm:getWidth()*5/4,checkmarkIm:getHeight()*5/4)
     love.graphics.setCanvas(checkmarkWithBg)
     love.graphics.clear(0x64/0xff,0x64/0xff,0x64/0xff)
     love.graphics.draw(checkmarkIm,checkmarkIm:getWidth()/8,checkmarkIm:getHeight()/8)
     love.graphics.setCanvas()
 
-    bgtileIm = love.graphics.newImage("bgtile.png")
+    bgtileIm = love.graphics.newImage("assets/bgtile.png")
     bgtileIm:setFilter("nearest")
 end
 

@@ -1,12 +1,12 @@
-nuklear = require 'nuklear'
-filedialog = require 'filedialog'
-serpent = require 'serpent'
-class = require '30log'
+nuklear = require("nuklear")
+filedialog = require("filedialog")
+serpent = require("serpent")
+class = require("30log")
 
-require 'util'
-require 'room'
-require 'autotiles'
-require 'tools'
+require("util")
+require("room")
+require("autotiles")
+require("tools")
 
 
 
@@ -271,7 +271,7 @@ end
 
 
 
-require 'fileio'
-require 'mainloop'
-require 'keyboard'
-require 'mouse'
+require("fileio")
+require("mainloop")
+require("keyboard")
+require("mouse")

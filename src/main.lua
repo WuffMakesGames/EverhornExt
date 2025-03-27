@@ -1,20 +1,14 @@
 nuklear = require("nuklear")
-filedialog = require("filedialog")
-serpent = require("serpent")
-class = require("30log")
+filedialog = require("code/filedialog")
+serpent = require("libraries/serpent")
+class = require("libraries/30log")
 
-require("util")
-require("room")
-require("autotiles")
-require("tools")
-
-
+require("code/util")
+require("code/room")
+require("code/autotiles")
+require("code/tools")
 
 -- global constants
-psep = love.system.getOS() == "Windows" and "\\" or "/" -- path separator
-
-
-
 function newProject()
     -- this is UI things
     love.graphics.setNewFont(12*global_scale)
@@ -269,9 +263,7 @@ function redo()
     if not activeRoom() then app.room = nil end
 end
 
-
-
-require("fileio")
+require("code/fileio")
+require("code/inputs/keyboard")
+require("code/inputs/mouse")
 require("mainloop")
-require("keyboard")
-require("mouse")

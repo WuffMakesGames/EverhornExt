@@ -18,9 +18,7 @@ function loadpico8(filename)
     love.graphics.setDefaultFilter("nearest", "nearest")
 
     local file, err = io.open(filename, "rb")
-
     local data = {}
-
     data.palette = {
         {0,  0,  0,  255},
         {29, 43, 83, 255},
@@ -66,7 +64,7 @@ function loadpico8(filename)
         end
     end
     local spritesheet_data = love.image.newImageData(128, 128)
-    for j = 0, spritesheet_data:getHeight()/2 - 1 do
+    for j = 0, spritesheet_data:getHeight() - 1 do
         local line = sections["gfx"] and sections["gfx"][j + 1] or "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
         for i = 0, spritesheet_data:getWidth() - 1 do
             local s = string.sub(line, 1 + i, 1 + i)
@@ -76,16 +74,16 @@ function loadpico8(filename)
         end
     end
 
-    for j =8,15 do
-        for i = 0, 15 do
-            local id=i+16*(j-8)
-            local d1=math.floor(id/16)
-            local d2=id%16
-            --spritesheet_data:paste(p8font,8*i,8*j,get_font_quad(d1))
-            spritesheet_data:paste(p8fontGrey,8*i,8*j,get_font_quad(d1))
-            spritesheet_data:paste(p8font,8*i+4,8*j,get_font_quad(d2))
-        end
-    end
+    -- for j =8,15 do
+    --     for i = 0, 15 do
+    --         local id=i+16*(j-8)
+    --         local d1=math.floor(id/16)
+    --         local d2=id%16
+    --         --spritesheet_data:paste(p8font,8*i,8*j,get_font_quad(d1))
+    --         spritesheet_data:paste(p8fontGrey,8*i,8*j,get_font_quad(d1))
+    --         spritesheet_data:paste(p8font,8*i+4,8*j,get_font_quad(d2))
+    --     end
+    -- end
 
     data.spritesheet = love.graphics.newImage(spritesheet_data)
 
@@ -473,7 +471,7 @@ function savePico8(filename)
 end
 
 function openFile()
-    local filename = filedialog.open()
+    local filename = filedialog.get_path()
     local openOk = false
     if filename then
         local ext = string.match(filename, ".(%w+)$")
@@ -490,7 +488,7 @@ function openFile()
         end
     end
     if openOk then
-        showMessage("Opened "..string.match(filename, psep.."([^"..psep.."]*)$"))
+        showMessage("Opened "..string.match(filename, "/([^/]*)$"))
 
         app.saveFileName = filename
     else
@@ -503,11 +501,11 @@ function saveFile(as)
     if app.saveFileName and not as then
         filename = app.saveFileName
     else
-        filename = filedialog.save()
+        filename = filedialog.get_path()
     end
 
     if filename and savePico8(filename) then
-        showMessage("Saved "..string.match(filename, psep.."([^"..psep.."]*)$"))
+        showMessage("Saved "..string.match(filename, "/([^/]*)$"))
 
         app.saveFileName = filename
     else

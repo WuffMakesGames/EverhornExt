@@ -1,4 +1,4 @@
-# ~~Everhorn~~ newlestehorn
+# ~~Everhorn~~ ~~newlestehorn~~ Everhorn-EXT
 
 **~~Everhorn~~ newlestehorn** is a map editor for the newleste.p8 project. It's a newleste.p8-specific version of Everhorn with UI improvements and all-new Camera Trigger support by @gonengazit!
 

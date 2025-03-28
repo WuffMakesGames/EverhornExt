@@ -75,6 +75,7 @@ function love.keypressed(key, scancode, isrepeat)
             if app.openFileName then
                 local data = loadpico8(app.openFileName)
                 p8data.spritesheet = data.spritesheet
+				p8data.spritesheet_alt = data.spritesheet_alt
                 showMessage("Reloaded")
             end
         -- Ctrl+S
@@ -159,7 +160,7 @@ function love.keypressed(key, scancode, isrepeat)
                 select(0, 0, activeRoom().w - 1, activeRoom().h - 1)
             end
         elseif key=="h" then
-            app.showGarbageTiles=not app.showGarbageTiles
+            app.showExtraTiles=not app.showExtraTiles
         elseif key=="t" then
             app.showCameraTriggers=not app.showCameraTriggers
         end

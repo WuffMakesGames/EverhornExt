@@ -8,73 +8,15 @@ require("code/room")
 require("code/autotiles")
 require("code/tools")
 
--- global constants
+-- New Project ==================================
 function newProject()
-    -- this is UI things
+    app = require("main/app")
+    project = require("main/project")
+    p8data = require("main/p8data")
+
+	-- User interface ===========================
     love.graphics.setNewFont(12*global_scale)
-    local w,h=love.graphics.getDimensions()
-    app = {
-        W=w,
-        H=h,
-        camX = 0,
-        camY = 0,
-        camScale = 2, --based on camScaleSetting
-        camScaleSetting = 1, -- 0, 1, 2 is 1x, 2x, 3x etc, -1, -2, -3 is 0.5x, 0.25x, 0.125x
-        room = nil,
-        suppressMouse = false, -- disables mouse-driven editing in love.update() when a click has triggered different action, reset on release
-        tool = tools.Brush:new(),
-        currentTile = 0,
-        message = nil,
-        messageTimeLeft = nil,
-        playtesting = false,
-        store_strings_as_hex=false,
-        showToolPanel = true,
-        showGarbageTiles=false,
-        showCameraTriggers=true,
-
-        -- history (undo stack)
-        history = {},
-        historyN = 0,
-
-        font = love.graphics.getFont(),
-
-        left = 0, top = 0, -- top left corner of editing area
-
-        -- these are used in various hacks to work around nuklear being big dumb (or me idk)
-        anyWindowHovered = false,
-        enterPressed = false,
-        roomAdded = false,
-    }
-
-    --ui:styleSetFont(love.graphics.getFont())
     ui:stylePush({['font']=app.font})
-    --print(app.font:getHeight())
-
-    -- this is what goes into history and (mostly) gets saved
-    project = {
-        rooms = {},
-        selection = nil,
-        selectedCamtriggerN = nil,
-        conf = {
-			param_names = {},
-			autotiles = {},
-			composite_shapes = {},
-		},
-    }
-
-    -- basic p8data with blank spritesheet
-    local data = {}
-    local imgdata = love.image.newImageData(128, 64)
-    imgdata:mapPixel(function() return 0, 0, 0, 1 end)
-    data.spritesheet = love.graphics.newImage(imgdata)
-    data.quads = {}
-    for i = 0, 15 do
-        for j = 0, 15 do
-            data.quads[i + j*16] = love.graphics.newQuad(i*8, j*8, 8, 8, data.spritesheet:getDimensions())
-        end
-    end
-
-    p8data = data
 end
 
 function toScreen(x, y)

@@ -32,6 +32,7 @@ function drawRoom(room, p8data, highlight)
     end
 
     -- tiles
+	local spritesheet = app.showGarbageTiles and p8data.spritesheet_alt or p8data.spritesheet
     for i = 0, room.w - 1 do
         for j = 0, room.h - 1 do
             local n = room.data[i][j]
@@ -40,7 +41,7 @@ function drawRoom(room, p8data, highlight)
                 love.graphics.setColor(1, 1, 1)
 
                 if n~= 0 then
-                    love.graphics.draw(p8data.spritesheet, p8data.quads[n], room.x + i*8, room.y + j*8)
+                    love.graphics.draw(spritesheet, p8data.quads[n], room.x + i*8, room.y + j*8)
                 end
             end
         end

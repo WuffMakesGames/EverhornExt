@@ -74,18 +74,19 @@ function loadpico8(filename)
         end
     end
 
-    -- for j =8,15 do
-    --     for i = 0, 15 do
-    --         local id=i+16*(j-8)
-    --         local d1=math.floor(id/16)
-    --         local d2=id%16
-    --         --spritesheet_data:paste(p8font,8*i,8*j,get_font_quad(d1))
-    --         spritesheet_data:paste(p8fontGrey,8*i,8*j,get_font_quad(d1))
-    --         spritesheet_data:paste(p8font,8*i+4,8*j,get_font_quad(d2))
-    --     end
-    -- end
+	local spritesheet_data_alt = spritesheet_data:clone()
+    for j =8,15 do
+        for i = 0, 15 do
+            local id=i+16*(j-8)
+            local d1=math.floor(id/16)
+            local d2=id%16
+            spritesheet_data_alt:paste(p8fontGrey,8*i,8*j,get_font_quad(d1))
+            spritesheet_data_alt:paste(p8font,8*i+4,8*j,get_font_quad(d2))
+        end
+    end
 
     data.spritesheet = love.graphics.newImage(spritesheet_data)
+    data.spritesheet_alt = love.graphics.newImage(spritesheet_data_alt)
 
     data.quads = {}
     for i = 0, 15 do

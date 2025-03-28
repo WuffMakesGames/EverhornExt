@@ -1,10 +1,10 @@
 -- UI things
-
 function tileButton(n, highlight, autotileOverlayO)
     local x, y, w, h = ui:widgetBounds()
 
     if n ~= 0 then
-        ui:image({p8data.spritesheet, p8data.quads[n]})
+		local spritesheet = app.showGarbageTiles and p8data.spritesheet_alt or p8data.spritesheet
+        ui:image({spritesheet, p8data.quads[n]})
     else
         ui:image(bgtileIm)
     end
@@ -47,6 +47,7 @@ function tileButton(n, highlight, autotileOverlayO)
             if u then ui:line(x, y, x + w, y) end
         end
     end
+	
     if ui:inputIsMousePressed("left", x, y, w, h) then
         return true
     end
@@ -56,10 +57,7 @@ function closeToolMenu()
     app.toolMenuX, app.toolMenuY = nil, nil
 end
 
-
-
 -- MAIN LOOP
-
 function love.load(args)
     love.keyboard.setKeyRepeat(true)
 
@@ -74,8 +72,6 @@ function love.load(args)
             tms = 4*global_scale
         end
     end
-
-    --p8data = loadpico8(love.filesystem.getSource().."\\celeste.p8")
 
     newProject()
     pushHistory()
@@ -123,7 +119,7 @@ function love.update(dt)
     }
 
     -- room panel
-    if ui:windowBegin("Room Panel", 0, 0, rpw, app.H, {"scrollbar"}) then
+    if ui:windowBegin("Room Panel", 0, 0, rpw, app.H) then
         ui:layoutRow("dynamic", 25*global_scale, 1)
         for n, room in ipairs(project.rooms) do
             local line = "["..n..""
@@ -157,7 +153,7 @@ function love.update(dt)
     -- tool panel
     if app.showToolPanel then
         local tpw = 16*8*tms + 18
-        if ui:windowBegin("Tool panel", app.W - tpw, 0, tpw, app.H) then
+        if ui:windowBegin("Tool panel", app.W - tpw, 0, tpw+20, app.H, {"scrollbar"}) then
             -- tools list
             for i = 0, #toolslist - 1 do
                 if i%4 == 0 then

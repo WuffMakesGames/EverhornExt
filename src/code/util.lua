@@ -208,9 +208,9 @@ function dumpproject(proj)
     return serpent.line(proj, {compact = true, comment = false, keyignore = {["data"] = true}})
 end
 
+-- emulate pico8's split
+-- split , sperated list, auto convert numbers to ints
 function split(str)
-    -- emulate pico8's split
-    -- split , sperated list, auto convert numbers to ints
     local tbl={}
     for val in string.gmatch(str, '([^,]+)') do
         if tonumber(val) ~= nil then
@@ -237,4 +237,10 @@ function printbg(text, x, y, fgcol, bgcol, centerx, centery)
 
     love.graphics.setColor(fgcol)
     love.graphics.print(text, x, y)
+end
+
+function table_pos(table,v)
+	for i,item in ipairs(table) do
+		if item == v then return i end
+	end
 end

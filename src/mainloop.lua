@@ -9,25 +9,15 @@ function tileButton(n, highlight, autotileOverlayO)
         ui:image(bgtileIm)
     end
 
-    local hov = false
-    if ui:inputIsHovered(x, y, w, h) then
-        hov = true
-    end
+    local hov = ui:inputIsHovered(x, y, w, h)
     if hov or highlight or autotileOverlayO then
         love.graphics.setLineWidth(1)
-        if hov then
-            love.graphics.setColor(0, 1, 0.5)
-        elseif highlight then
-            love.graphics.setColor(1, 0, 1)
-        end
+		love.graphics.setColor(hov and {0, 1, 0.5} or {1, 0, 1})
 
         if hov or highlight then
             local x, y = x - 0.5, y - 0.5
             local w, h = w + 1, h + 1
-            ui:line(x, y, x + w, y)
-            ui:line(x, y, x, y + h)
-            ui:line(x + w, y, x + w, y + h)
-            ui:line(x, y + h, x + w, y + h)
+			ui_rect(x, y, x+w, y+h)
         end
 
         if autotileOverlayO and autotileOverlayO < 16 then
@@ -48,9 +38,7 @@ function tileButton(n, highlight, autotileOverlayO)
         end
     end
 	
-    if ui:inputIsMousePressed("left", x, y, w, h) then
-        return true
-    end
+	return ui:inputIsMousePressed("left", x, y, w, h)
 end
 
 function closeToolMenu()
@@ -60,7 +48,6 @@ end
 -- MAIN LOOP
 function love.load(args)
     love.keyboard.setKeyRepeat(true)
-
     ui = nuklear.newUI()
 
     global_scale=1 -- global scale, to run nicely on hi dpi displays
@@ -119,21 +106,23 @@ function love.update(dt)
     }
 
     -- room panel
-    if ui:windowBegin("Room Panel", 0, 0, rpw, app.H) then
+    if ui:windowBegin("Room Panel", 0, 0, rpw, app.H, {"scrollbar"}) then
         ui:layoutRow("dynamic", 25*global_scale, 1)
         for n, room in ipairs(project.rooms) do
             local line = "["..n..""
-            line = line .. (room.exits.left and "l" or "")
-            line = line .. (room.exits.bottom and "d" or "")
-            line = line .. (room.exits.right and "r" or "")
-            line = line .. (room.exits.top and "u" or "")
-            line = line .. (room.is_string and "s" or "")
+			if project.conf.include_exits then
+				line = line .. (room.exits.left and "l" or "")
+				line = line .. (room.exits.bottom and "d" or "")
+				line = line .. (room.exits.right and "r" or "")
+				line = line .. (room.exits.top and "u" or "")
+			end
+			line = line .. (room.is_string and "s" or "")
             line = line .. "] " .. room.title
 
+			--center camera around room
             local selection={value=n==app.room}
             if ui:selectable(line, selection) then
                 if app.room==n then
-                    --center camera around room
                     app.camX,app.camY=-room.x-4*room.w+app.W/(3*app.camScale), -room.y-4*room.h+app.H/(2*app.camScale)
 
                 end
@@ -288,7 +277,6 @@ function love.draw()
     end
     if activeRoom() then
         local room = activeRoom()
-
         drawRoom(room, p8data)
 
         if app.roomPanelHovered then

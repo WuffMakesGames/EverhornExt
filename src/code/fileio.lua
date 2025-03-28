@@ -122,8 +122,6 @@ function loadpico8(filename)
 
     -- code: look for the magic comment
     local code = table.concat(sections["lua"], "\n")
-
-
 	data.conf = {}
 
     -- get configuration code, if exists
@@ -164,6 +162,8 @@ function loadpico8(filename)
     end
     -- parameter names default to none
     data.conf.param_names = data.conf.param_names or {}
+	print(data.conf.include_exits)
+	data.conf.include_exits = data.conf.include_exits or true
 
     mapdata = mapdata or {}
 
@@ -184,12 +184,21 @@ function loadpico8(filename)
     -- load levels
     if levels[1] then
         for n, s in pairs(levels) do
-            local x, y, w, h, exits, params= string.match(s, "^([^,]*),([^,]*),([^,]*),([^,]*),?([^,]*),?(.*)$")
-            x, y, w, h, exits = tonumber(x), tonumber(y), tonumber(w), tonumber(h),exits:sub(1,2)=="0b" and tonumber(exits:sub(3),2) or tonumber(exits) or 1
-            params=split(params or "")
+            local x, y, w, h, params = string.match(s, "^([^,]*),([^,]*),([^,]*),([^,]*),?(.*)$")
+			x, y, w, h = tonumber(x), tonumber(y), tonumber(w), tonumber(h)
+
+			-- Load exits
+			local params,exits = split(params or ""), { false,false,false,false }
+			if data.conf.include_exits then
+				exits = params[1]
+				exits = {left=bit.band(exits,2^3)~=0, bottom=bit.band(exits,2^2)~=0, right=bit.band(exits,2^1)~=0, top=bit.band(exits,2^0)~=0}
+				table.remove(params, 1)
+			end
+
+			-- Load data
             if x and y and w and h then -- this confirms they're there and they're numbers
                 data.rooms[n] = newRoom(x*128, y*128, w*16, h*16)
-                data.rooms[n].exits={left=bit.band(exits,2^3)~=0, bottom=bit.band(exits,2^2)~=0, right=bit.band(exits,2^1)~=0, top=bit.band(exits,2^0)~=0}
+                data.rooms[n].exits=exits
                 data.rooms[n].is_string=false
                 data.rooms[n].params=params
             else
@@ -292,23 +301,19 @@ function savePico8(filename)
 
     --boolean 128x64 table which marks which tiles are part of rooms
     local is_room={}
-    for i=0,127 do
-        is_room[i]={}
-    end
+    for i=0,127 do is_room[i]={} end
 
     for _, room in ipairs(project.rooms) do
-        if not room.is_string then
-            local i0, j0 = div8(room.x), div8(room.y)
-            for i = 0, room.w - 1 do
-                for j = 0, room.h - 1 do
-                    if map[i0+i] then
-                        map[i0+i][j0+j] = room.data[i][j]
-                        is_room[i0+i][j0+j]=true
-                    end
-                end
-            end
-        end
-    end
+	if not room.is_string then
+		local i0, j0 = div8(room.x), div8(room.y)
+		for i = 0, room.w - 1 do
+		for j = 0, room.h - 1 do
+			if map[i0+i] then
+				map[i0+i][j0+j] = room.data[i][j]
+				is_room[i0+i][j0+j]=true
+			end
+		end end
+	end end
 
     -- use current cart as base
     file = io.open(app.openFileName, "rb")
@@ -329,19 +334,27 @@ function savePico8(filename)
     local levels, mapdata, camera_offsets = {}, {}, {}
     for n = 1, #project.rooms do
         local room = project.rooms[n]
-        local exit_string="0b"
-        for _,v in pairs({"left","bottom","right","top"}) do
-            if room.exits[v] then
-                exit_string=exit_string.."1"
-            else
-                exit_string=exit_string.."0"
-            end
-        end
-        levels[n] = string.format("%g,%g,%g,%g,%s", room.x/128, room.y/128, room.w/16, room.h/16, exit_string)
+        levels[n] = string.format("%g,%g,%g,%g", room.x/128, room.y/128, room.w/16, room.h/16)
+
+		-- Level exits ==========================
+		if project.conf.include_exits then
+			local exit_string="0b"
+			for _,v in pairs({"left","bottom","right","top"}) do
+				if room.exits[v] then
+					exit_string=exit_string.."1"
+				else
+					exit_string=exit_string.."0"
+				end
+			end
+			levels[n] = levels[n]..","..exit_string
+		end
+
+		-- Level parameters =====================
         for _,v in ipairs(room.params) do
             levels[n]=levels[n]..","..v
         end
 
+		-- Level mapdata ========================
         if room.is_string then
             if app.store_strings_as_hex then
                 mapdata[n] = dumproomdata_hex(room)
@@ -350,6 +363,7 @@ function savePico8(filename)
             end
         end
 
+		-- Level triggers =======================
         if room.camtriggers then
             camera_offsets[n]={}
             for _,t in pairs(room.camtriggers) do
@@ -360,9 +374,7 @@ function savePico8(filename)
     end
 
     -- map section
-
     -- start out by making sure both sections exist, and are sized to max size
-
     local gfxexist, mapexist=false,false
     for k = 1, #out do
         if out[k] == "__gfx__" then

@@ -7,6 +7,7 @@ require("code/util")
 require("code/room")
 require("code/autotiles")
 require("code/tools")
+require("code/ui_helpers")
 
 -- New Project ==================================
 function newProject()

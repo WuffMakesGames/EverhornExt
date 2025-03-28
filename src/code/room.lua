@@ -20,7 +20,6 @@ function drawRoom(room, p8data, highlight)
     --background color
     love.graphics.setColor(0.133, 0.133, 0.133)
     love.graphics.rectangle("fill", room.x, room.y, room.w*8, room.h*8)
-
     love.graphics.setColor(1, 1, 1)
 
     -- draw shapes bigger than 1x1 (like spinners)

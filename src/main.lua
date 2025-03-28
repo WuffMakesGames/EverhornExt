@@ -64,16 +64,16 @@ function drawMouseOverTile(col, tile)
     end
 end
 
-function drawColoredRect(room, x, y, w, h, col, filled)
+function drawColoredRect(x, y, w, h, col, filled)
     love.graphics.setColor(col)
     love.graphics.setLineWidth(1 / app.camScale)
-    love.graphics.rectangle("line", room.x + x + 0.5 / app.camScale,
-                                    room.y + y + 0.5 / app.camScale,
+    love.graphics.rectangle("line", x + 0.5 / app.camScale,
+                                    y + 0.5 / app.camScale,
                                     w, h)
     if filled then
         love.graphics.setColor(col[1], col[2], col[3], 0.25)
-        love.graphics.rectangle("fill", room.x + x + 0.5 / app.camScale,
-                                        room.y + y + 0.5 / app.camScale,
+        love.graphics.rectangle("fill", x + 0.5 / app.camScale,
+                                        y + 0.5 / app.camScale,
                                         w, h)
     end
 end

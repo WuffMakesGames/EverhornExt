@@ -27,8 +27,9 @@ function tool:draw()
     if not self.camtriggerI then
         drawMouseOverTile({1,0.75,0})
     elseif ti then
+		local room = activeRoom()
         local i, j, w, h = rectCont2Tiles(ti, tj, self.camtriggerI, self.camtriggerJ)
-        drawColoredRect(activeRoom(), i*8, j*8, w*8, h*8, {1,0.75,0}, false)
+        drawColoredRect(room.x+i*8, room.y+j*8, w*8, h*8, {1, 0.75, 0}, false)
     end
 end
 

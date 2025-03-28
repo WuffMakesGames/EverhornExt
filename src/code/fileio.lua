@@ -161,9 +161,8 @@ function loadpico8(filename)
         end
     end
     -- parameter names default to none
+	if data.conf.include_exits == nil then data.conf.include_exits = true end
     data.conf.param_names = data.conf.param_names or {}
-	print(data.conf.include_exits)
-	data.conf.include_exits = data.conf.include_exits or true
 
     mapdata = mapdata or {}
 

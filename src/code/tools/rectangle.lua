@@ -11,8 +11,9 @@ function tool:draw()
     if not self.rectangleI then
         drawMouseOverTile(nil, app.currentTile)
     elseif ti then
+		local room = activeRoom()
         local i, j, w, h = rectCont2Tiles(ti, tj, self.rectangleI, self.rectangleJ)
-        drawColoredRect(activeRoom(), i*8, j*8, w*8, h*8, {0, 1, 0.5}, false)
+        drawColoredRect(room.x+i*8, room.y+j*8, w*8, h*8, {0, 1, 0.5}, false)
     end
 end
 

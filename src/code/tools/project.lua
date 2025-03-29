@@ -8,13 +8,15 @@ function tool:panel()
     if ui:button("Save as...") then saveFile(true) end
 
 	-- String format ============================
-    ui:layoutRow("dynamic", 25*global_scale,3)
+    ui:layoutRow("dynamic", 25*global_scale, 2)
     ui:label("Encode string levels as:")
+	project.conf.format = formats.names[ui:combobox(table_pos(formats.names,project.conf.format), formats.names)]
 
-    local radio_state = {value=app.store_strings_as_hex and "Hex" or "Base256"}
-    ui:radio("Base256", radio_state)
-    ui:radio("Hex", radio_state)
-    app.store_strings_as_hex = radio_state.value=="Hex"
+    -- local radio_state = { value = project.conf.format }
+    -- ui:radio(export_base256.name, radio_state)
+    -- ui:radio(export_hex.name, radio_state)
+	-- ui:radio(export_hex_rle.name, radio_state)
+    -- project.conf.format = radio_state.value
 
 	-- Options ==================================
 	project.conf.include_exits = ui:checkbox("Include level exits?", project.conf.include_exits)

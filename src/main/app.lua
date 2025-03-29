@@ -11,7 +11,6 @@ return {
 	message = nil,
 	messageTimeLeft = nil,
 	playtesting = false,
-	store_strings_as_hex=false,
 	font = love.graphics.getFont(),
 	left = 0, top = 0, -- top left corner of editing area
 

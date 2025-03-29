@@ -13,7 +13,6 @@ local function cr_file_lines(file)
 end
 
 -- file handling
-
 function loadpico8(filename)
     love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -41,7 +40,7 @@ function loadpico8(filename)
     local sections = {}
     local cursec = nil
     for line in cr_file_lines(file) do
-        local sec = string.match(line, "^__([%a_]+)__$")
+        local sec = string.match(line, "^__([%a_:]+)__$")
         if sec then
             cursec = sec
             sections[sec] = {}
@@ -125,15 +124,19 @@ function loadpico8(filename)
 	data.conf = {}
 
     -- get configuration code, if exists
-    local evhconf = string.match(code, "%-%-@conf([^@]+)%-%-@")
-    if evhconf then
-        evhconf = string.match(evhconf, "%-%-%[%[([^@]+)%]%]")
-        if evhconf then
+    local conf = string.match(code, "%-%-@conf([^@]+)%-%-@")
+	if sections["meta:everhorn"] then
+		conf = ""
+		for i,line in ipairs(sections["meta:everhorn"]) do
+			conf = conf..line.."\n"
+		end
+	end
 
-            local chunk, err = loadstring(evhconf)
-
+    if conf then
+        conf = string.match(conf, "%-%-%[%[([^@]+)%]%]")
+        if conf then
+            local chunk, err = loadstring(conf)
             if not err then
-				-- this reads contents into data.conf
                 chunk = setfenv(chunk, data.conf)
                 chunk()
             end
@@ -146,10 +149,6 @@ function loadpico8(filename)
         -- get names of parameters from commented string
         local param_string=evh:match("%-%-\"x,y,w,h,exit_dirs,?(.-)\"")
         data.conf.param_names = data.conf.param_names or split(param_string or "")
-
-        -- cut out comments - loadstring doesn't parse them for some reason
-        -- evh = string.gsub(evh, "%-%-[^\n]*\n", "")
-        -- evh = string.gsub(evh, "//[^\n]*\n", "")
 
         local chunk, err = loadstring(evh)
         if not err then
@@ -164,10 +163,9 @@ function loadpico8(filename)
 	if data.conf.include_exits == nil then data.conf.include_exits = true end
     data.conf.param_names = data.conf.param_names or {}
 
-    mapdata = mapdata or {}
-
     -- flatten levels and mapdata
     local lvls = {}
+    mapdata = mapdata or {}
     if levels then
         for n, s in pairs(levels) do
             table.insert(lvls, {n, s, mapdata[n]})
@@ -215,31 +213,36 @@ function loadpico8(filename)
         end
     end
 
-    -- load mapdata
-
-    data.store_strings_as_hex=false
-    if mapdata then
-        local all_hex=true
-        for n, levelstr in pairs(mapdata) do
-            local room = data.rooms[n]
-            if room then
-                if levelstr:match("[%da-f]") and #levelstr==room.w*room.h*2 then
-                    loadroomdata_hex(room, levelstr)
-                else
-                    loadroomdata_base256(room, levelstr)
-                    all_hex=false
-                end
-                room.is_string=true
-            end
-        end
-
-        -- if all string levels were stored as hex, (and there are nonzero of them), default to storing them as hex
-        -- in all other cases, default to storing them in base256
-        if all_hex and next(mapdata)~=nil then
-            data.store_strings_as_hex=true
-        end
-    end
-
+    -- Load mapdata =============================
+	if mapdata then
+		if data.conf.format then
+			print("Format found:", data.conf.format)
+			for n, levelstr in pairs(mapdata) do
+				local room = data.rooms[n]
+				if room then
+					formats[data.conf.format].load(room, levelstr)
+					room.is_string=true
+				end
+			end
+		
+		-- Assume format (hex or base256)
+		else
+			data.conf.format = export_hex.name
+			for n, levelstr in pairs(mapdata) do
+				local room = data.rooms[n]
+				if room then
+					if levelstr:match("[%da-f]") and #levelstr==room.w*room.h*2 then
+						export_hex.load(room, levelstr)
+					else
+						export_base256.load(room, levelstr)
+						data.conf.format = export_base256.name
+					end
+					room.is_string=true
+				end
+			end
+		end
+	end
+	
     -- fill rooms with no mapdata from p8 map
     for n, room in ipairs(data.rooms) do
         if not room.is_string then
@@ -281,8 +284,6 @@ function openPico8(filename)
     p8data = loadpico8(filename)
     project.rooms = p8data.rooms
 
-    app.store_strings_as_hex = p8data.store_strings_as_hex
-
     for k, v in pairs(p8data.conf) do
         project.conf[k] = v
     end
@@ -321,7 +322,6 @@ function savePico8(filename)
     end
 
     local out = {}
-
     local ln = 1
     local gfxstart, mapstart
     for line in cr_file_lines(file) do
@@ -355,11 +355,7 @@ function savePico8(filename)
 
 		-- Level mapdata ========================
         if room.is_string then
-            if app.store_strings_as_hex then
-                mapdata[n] = dumproomdata_hex(room)
-            else
-                mapdata[n] = dumproomdata_base256(room)
-            end
+			mapdata[n] = formats[project.conf.format].dump(room)
         end
 
 		-- Level triggers =======================
@@ -443,8 +439,8 @@ function savePico8(filename)
     -- newline at the end to match vanilla carts
 
     -- add configuration block if missing
-    if not cartdata:match("%-%-@conf") then
-        cartdata = cartdata:gsub("%-%-@begin", "--@conf\n--[[ ]]\n--@begin")
+    if not cartdata:match("__meta:everhorn__") then
+        cartdata = cartdata.."__meta:everhorn__\n--[[ ]]\n"
     end
 
     -- rewrite configuration block
@@ -452,7 +448,7 @@ function savePico8(filename)
     for key, value in pairs(project.conf) do
 		confcode = confcode .. key .. "=" .. dumplualine(value) .. "\n"
     end
-    cartdata = cartdata:gsub("%-%-@conf.-%-%-%[%[.-%]%]", "--@conf\n--[[\n"..confcode.."]]")
+    cartdata = cartdata:gsub("__meta:everhorn__.-%-%-%[%[.-%]%]", "__meta:everhorn__\n--[[\n"..confcode.."]]")
 
     -- write to levels table without overwriting the code
     cartdata = cartdata:gsub("(%-%-@begin.*levels%s*=%s*){.-}(.*%-%-@end)","%1"..dumplua(levels).."%2")

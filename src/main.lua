@@ -8,6 +8,7 @@ require("code/room")
 require("code/autotiles")
 require("code/tools")
 require("code/ui_helpers")
+formats = require("code/export")
 
 -- New Project ==================================
 function newProject()
@@ -170,8 +171,6 @@ end
 function pushHistory()
     local s = dumpproject(project)
     if s ~= app.history[app.historyN] then
-        --print("BEFORE: "..tostring(app.history[app.historyN]))
-        --print("AFTER: "..s)
         app.historyN = app.historyN + 1
 
         for i = app.historyN, #app.history do

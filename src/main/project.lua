@@ -4,8 +4,9 @@ return {
 	selectedCamtriggerN = nil,
 	conf = {
 		include_exits = true,
+		composite_shapes = {},
 		param_names = {},
 		autotiles = {},
-		composite_shapes = {},
+		format = "Base256",
 	},
 }

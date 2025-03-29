@@ -130,62 +130,16 @@ function b26(n)
     end
 end
 
-
-
-function loadroomdata_hex(room, levelstr)
-    for i = 0, room.w - 1 do
-        for j = 0, room.h - 1 do
-            local k = i + j*room.w
-            room.data[i][j] = fromhex(string.sub(levelstr, 1 + 2*k, 2 + 2*k))
-        end
-    end
-end
-
-function dumproomdata_hex(room)
-    local s = ""
-    for j = 0, room.h - 1 do
-        for i = 0, room.w - 1 do
-            s = s .. tohex(room.data[i][j])
-        end
-    end
-    return s
-end
-
-function loadroomdata_base256(room,levelstr)
-    local i,j=0,0
-    for pos,codepoint in utf8.codes(levelstr) do
-        --p8scii has a couple of chars which are 2 bytes, the 2nd of which is 0xFE0F
-        if codepoint~=0xFE0F then
-            room.data[i][j]=frombase256(utf8.char(codepoint))
-            i=i+1
-            if i == room.w then
-                i=0
-                j=j+1
-            end
-        end
-    end
-end
-
-function dumproomdata_base256(room)
-    local s = ""
-    for j = 0, room.h - 1 do
-        for i = 0, room.w - 1 do
-            s = s .. tobase256(room.data[i][j])
-        end
-    end
-    return s
-end
-
 function roomMakeStr(room)
     if room then
-        room.str = dumproomdata_hex(room)
+        room.str = export_hex.dump(room)
     end
 end
 
 function roomMakeData(room)
     if room then
         room.data = fill2d0s(room.w, room.h)
-        loadroomdata_hex(room, room.str)
+        export_hex.load(room, room.str)
     end
 end
 

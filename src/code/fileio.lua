@@ -175,7 +175,7 @@ function loadpico8(filename)
 			-- Load exits
 			local params,exits = split(params or ""), { false,false,false,false }
 			if data.conf.include_exits then
-				exits = params[1]
+				exits = params[1] or 0
 				exits = {left=bit.band(exits,2^3)~=0, bottom=bit.band(exits,2^2)~=0, right=bit.band(exits,2^1)~=0, top=bit.band(exits,2^0)~=0}
 				table.remove(params, 1)
 			end

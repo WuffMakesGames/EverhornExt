@@ -95,7 +95,6 @@ function drawCompositeShape(n, x, y)
 	for id,tile in pairs(shape) do
 		if id ~= "0,0" and tile > 0 then
 			local ox,oy = unpack(split(id))
-			print(tile)
 			love.graphics.draw(p8data.spritesheet_noblack, p8data.quads[tile], x+ox*8, y+oy*8)
 		end
 	end

@@ -2,9 +2,9 @@ local filedialog = {}
 local pickfile = require("libraries/pickfile")
 local nfd = love.filesystem.isFused() and require("nfd")
 
-function filedialog.get_path()
-	local path = nfd and nfd.open("p8")
-		or pickfile("Select a file", nil, {"PICO-8", "*.p8"})
+function filedialog.get_path(extension,name)
+	local path = nfd and nfd.open(extension)
+		or pickfile("Select a file", nil, {name or "PICO-8", "*."..extension})
 	print(path)
     return path
 end

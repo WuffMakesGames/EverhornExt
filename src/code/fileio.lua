@@ -19,22 +19,10 @@ function loadpico8(filename)
     local file, err = io.open(filename, "rb")
     local data = {}
     data.palette = {
-        {0,  0,  0,  255},
-        {29, 43, 83, 255},
-        {126,37, 83, 255},
-        {0,  135,81, 255},
-        {171,82, 54, 255},
-        {95, 87, 79, 255},
-        {194,195,199,255},
-        {255,241,232,255},
-        {255,0,  77, 255},
-        {255,163,0,  255},
-        {255,240,36, 255},
-        {0,  231,86, 255},
-        {41, 173,255,255},
-        {131,118,156,255},
-        {255,119,168,255},
-        {255,204,170,255}
+        rgb(0, 0, 0),		rgb(29, 43, 83),	rgb(126, 37, 83),	rgb(0, 135, 81),
+        rgb(171, 82, 54),	rgb(95, 87, 79),	rgb(194, 195, 199),rgb(255, 241, 232),
+        rgb(255, 0, 77),	rgb(255, 163, 0),	rgb(255, 240, 36),	rgb(0, 231, 86),
+        rgb(41, 173, 255),	rgb(131, 118, 156),rgb(255, 119, 168),rgb(255, 204, 170)
     }
 
     local sections = {}
@@ -479,7 +467,7 @@ function savePico8(filename)
 end
 
 function openFile()
-    local filename = filedialog.get_path()
+    local filename = filedialog.get_path("p8", "PICO-8")
     local openOk = false
     if filename then
         local ext = string.match(filename, ".(%w+)$")
@@ -509,7 +497,7 @@ function saveFile(as)
     if app.saveFileName and not as then
         filename = app.saveFileName
     else
-        filename = filedialog.get_path()
+        filename = filedialog.get_path("p8", "PICO-8")
     end
 
     if filename and savePico8(filename) then

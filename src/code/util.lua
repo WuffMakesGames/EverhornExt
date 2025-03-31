@@ -1,5 +1,6 @@
 local utf8 = require("utf8")
 
+function rgb(r,g,b) return { r,g,b } end
 function isempty(t)
     for k, v in pairs(t) do
         return false

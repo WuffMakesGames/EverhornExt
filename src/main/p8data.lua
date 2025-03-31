@@ -4,6 +4,7 @@ imgdata:mapPixel(function() return 0, 0, 0, 1 end)
 
 data.spritesheet = love.graphics.newImage(imgdata)
 data.spritesheet_alt = love.graphics.newImage(imgdata)
+data.spritesheet_noblack = love.graphics.newImage(imgdata)
 
 data.quads = {}
 for i = 0, 15 do

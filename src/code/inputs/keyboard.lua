@@ -64,13 +64,21 @@ function love.keypressed(key, scancode, isrepeat)
         return
     end
 
-    -- non-repeatable global shortcuts
+	-- Test project [f5] ========================
+	-- if key == "f5" then
+	-- 	savePico8("tempfile.p8")
+	-- 	love.filesystem.write("executable_path", app.executable_path)
+	-- 	local path = '"'..app.executable_path..'"'
+	-- 	io.popen(path.." -run ".."tempfile.p8")
+	-- end
 
+    -- non-repeatable global shortcuts
     if love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl") then
-        -- Ctrl+O
+        -- Open file [Ctrl+O] ===================
         if key == "o" then
             openFile()
-        -- Ctrl+R
+
+        -- Reload [Ctrl+R] ======================
         elseif key == "r" then
             if app.openFileName then
                 local data = loadpico8(app.openFileName)
@@ -78,10 +86,12 @@ function love.keypressed(key, scancode, isrepeat)
 				p8data.spritesheet_alt = data.spritesheet_alt
                 showMessage("Reloaded")
             end
-        -- Ctrl+S
+
+        -- Save [Ctrl+S] ========================
         elseif key == "s" then
             saveFile(love.keyboard.isDown("lshift"))
-        -- Ctrl+X
+
+        -- Cut [Ctrl+X] =========================
         elseif key == "x" then
             if love.keyboard.isDown("lshift") then
                 -- cut entire room
@@ -103,7 +113,8 @@ function love.keypressed(key, scancode, isrepeat)
                     showMessage("Cut")
                 end
             end
-        -- Ctrl+C
+
+        -- Copy [Ctrl+C] ========================
         elseif key == "c" then
             if love.keyboard.isDown("lshift") then
                 -- copy entire room
@@ -123,7 +134,8 @@ function love.keypressed(key, scancode, isrepeat)
                     showMessage("Copied")
                 end
             end
-        -- Ctrl+V
+
+        -- Paste [Ctrl+V] =======================
         elseif key == "v" then
             placeSelection() -- to clean selection first
 

@@ -1,4 +1,4 @@
-local tool = Tool:extend("Brush"):with(TilePanelMx)
+local tool = Tool:extend("Brush"):with(require("code/mixins/tileset"))
 
 -- Methods ======================================
 function tool:panel()

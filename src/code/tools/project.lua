@@ -7,16 +7,22 @@ function tool:panel()
     if ui:button("Save") then saveFile(false) end
     if ui:button("Save as...") then saveFile(true) end
 
+	-- Executable ===============================
+    -- ui:layoutRow("dynamic", 25*global_scale, {0.25, 0.65, 0.1})
+	-- ui:label("Executable path:")
+
+	-- local path = {value = app.executable_path}
+	-- ui:edit("field", path)
+	-- app.executable_path = path.value
+
+	-- if ui:button("...") then
+	-- 	app.executable_path = filedialog.get_path("", "") or app.executable_path
+	-- end
+
 	-- String format ============================
     ui:layoutRow("dynamic", 25*global_scale, 2)
     ui:label("Encode string levels as:")
 	project.conf.format = formats.names[ui:combobox(table_pos(formats.names,project.conf.format), formats.names)]
-
-    -- local radio_state = { value = project.conf.format }
-    -- ui:radio(export_base256.name, radio_state)
-    -- ui:radio(export_hex.name, radio_state)
-	-- ui:radio(export_hex_rle.name, radio_state)
-    -- project.conf.format = radio_state.value
 
 	-- Options ==================================
 	project.conf.include_exits = ui:checkbox("Include level exits?", project.conf.include_exits)

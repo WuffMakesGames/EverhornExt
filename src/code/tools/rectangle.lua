@@ -1,4 +1,4 @@
-local tool = Tool:extend("Rectangle"):with(TilePanelMx)
+local tool = Tool:extend("Rectangle"):with(require("code/mixins/tileset"))
 
 -- Methods ======================================
 function tool:panel()

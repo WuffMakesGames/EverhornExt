@@ -350,7 +350,7 @@ function savePico8(filename)
         if room.camtriggers then
             camera_offsets[n]={}
             for _,t in pairs(room.camtriggers) do
-                local trigger_str=string.format("%d,%d,%d,%d,%s,%s",t.x,t.y,t.w,t.h,t.off_x,t.off_y)
+                local trigger_str = string.format("%d,%d,%d,%d,%s,%s",t.x,t.y,t.w,t.h,t.off_x,t.off_y)
                 table.insert(camera_offsets[n],trigger_str)
             end
         end

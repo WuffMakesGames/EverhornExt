@@ -147,7 +147,7 @@ function love.keypressed(key, scancode, isrepeat)
                         project.selection = s
                         project.selection.x = roundto8(mx - s.w*4)
                         project.selection.y = roundto8(my - s.h*4)
-                        switchTool(tools.Select)
+						app.currentTool = "Selection"
 
                         showMessage("Pasted")
                     elseif t[1] == "room" then
@@ -168,7 +168,7 @@ function love.keypressed(key, scancode, isrepeat)
             end
         elseif key == "a" then
             if activeRoom() then
-                switchTool(tools.Select)
+				app.currentTool = "Selection"
                 select(0, 0, activeRoom().w - 1, activeRoom().h - 1)
             end
         elseif key=="h" then

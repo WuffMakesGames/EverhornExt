@@ -1,10 +1,6 @@
-local tool = Tool:extend("Brush"):with(require("code/mixins/tileset"))
+local tool = Tool:extend("Brush")
 
 -- Methods ======================================
-function tool:panel()
-    self:tilePanel()
-end
-
 function tool:update(dt)
     if not ui:windowIsAnyHovered()
     and not love.keyboard.isDown("lalt")

@@ -1,10 +1,6 @@
-local tool = Tool:extend("Rectangle"):with(require("code/mixins/tileset"))
+local tool = Tool:extend("Rectangle")
 
 -- Methods ======================================
-function tool:panel()
-    self:tilePanel()
-end
-
 function tool:draw()
     local ti, tj = mouseOverTile()
 

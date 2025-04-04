@@ -99,14 +99,10 @@ function love.update(dt)
     if app.showToolPanel then
         local tpw = 16*8*tms + 18
         if ui:windowBegin("Tool panel", app.W - tpw, 0, tpw+12, app.H, {"scrollbar"}) then
+			ui:layoutRow("dynamic", 25*global_scale, 5)
             -- tools list
             for i = 0, #toolslist - 1 do
-                if i%4 == 0 then
-                    ui:layoutRow("dynamic", 25*global_scale, 4)
-                end
-
                 local toolClass = tools[toolslist[1 + i]]
-
                 if ui:selectable(toolClass.name, app.tool:instanceOf(toolClass)) then
                     switchTool(toolClass)
                 end

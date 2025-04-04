@@ -7,6 +7,7 @@ return {
 		composite_shapes = {},
 		param_names = {},
 		autotiles = {},
+		backgrounds = {},
 		format = "Base256",
 	},
 }

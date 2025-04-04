@@ -10,6 +10,6 @@ function add_format(path)
 end
 
 -- Return =======================================
-export_base256 = add_format("code/export/base256")
-export_hex = add_format("code/export/hex")
+export_base256 = add_format("code/formats/base256")
+export_hex = add_format("code/formats/hex")
 return formats

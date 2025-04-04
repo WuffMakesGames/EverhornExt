@@ -9,7 +9,7 @@ function newRoom(x, y, w, h)
         exits={left=false, bottom=false, right=false, top=true},
         params = {},
         title = "",
-        camtriggers={}
+        camtriggers={},
     }
     room.data = fill2d0s(room.w, room.h)
 
@@ -18,14 +18,24 @@ end
 
 function drawRoom(room, p8data, highlight)
 	local active = room == activeRoom()
+
 	love.graphics.push()
 	love.graphics.translate(room.x, room.y)
+	local ox,oy = toScreen(room.x,room.y)
+	love.graphics.setScissor(ox,oy, room.w*8*app.camScale, room.h*8*app.camScale)
 
 	-- Background ===============================
 	if active then
 		love.graphics.setColor(0.133, 0.133, 0.133)
 		love.graphics.rectangle("fill", 0, 0, room.w*8, room.h*8)
 		love.graphics.setColor(1, 1, 1)
+
+		if app.background_image then
+			for xx = 0, room.w*8, app.background_image:getWidth() do
+			for yy = 0, room.h*8, app.background_image:getHeight() do
+				love.graphics.draw(app.background_image, xx, yy)
+			end end
+		end
 	end
 
     -- draw shapes bigger than 1x1 (like spinners)
@@ -83,4 +93,5 @@ function drawRoom(room, p8data, highlight)
 
 	-- Pop
 	love.graphics.pop()
+	love.graphics.setScissor()
 end

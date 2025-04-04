@@ -10,18 +10,20 @@ local autolayout = {
 
 -- Methods ======================================
 function mixin:tilePanel()
-	ui:layoutRow("dynamic", 25*global_scale, 3)
-    ui:label("Tiles:")
-	app.showExtraTiles = ui:checkbox("Show extra tiles", app.showExtraTiles)
-	app.showGarbageTiles = ui:checkbox("Use garbage?", app.showGarbageTiles)
-
-	-- Buttons
+	self:options()
 	self:tiles()
 	self:autotiles()
 	self:composite()
 end
 
 -- Tileset ======================================
+function mixin:options()
+	ui:layoutRow("dynamic", 25*global_scale, 3)
+    ui:label("Tiles:")
+	app.showExtraTiles = ui:checkbox("Show extra tiles", app.showExtraTiles)
+	app.showGarbageTiles = ui:checkbox("Use garbage?", app.showGarbageTiles)
+end
+
 function mixin:tiles()
 	ui:layoutRow("static", 8*tms, 8*tms, 16)
 	for n = 0, app.showExtraTiles and 255 or 127 do

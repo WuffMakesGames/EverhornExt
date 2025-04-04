@@ -1,4 +1,4 @@
-local tool = Tool:extend("Camera Trigger")
+local tool = Tool:extend("Triggers")
 
 -- Methods ======================================
 function tool:panel()

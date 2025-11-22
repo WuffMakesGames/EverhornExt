@@ -72,7 +72,7 @@ function love.mousemoved(x, y, dx, dy, istouch)
     end
 
     local mx, my = fromScreen(x, y)
-    local ti, tj = div8(mx), div8(my)
+    local tx, ty = div8(mx), div8(my)
     if app.camMoveX then
         app.camX = app.camX + mx - app.camMoveX
         app.camY = app.camY + my - app.camMoveY

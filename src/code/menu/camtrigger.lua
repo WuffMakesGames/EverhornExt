@@ -22,20 +22,20 @@ function tool:panel()
 end
 
 function tool:draw()
-    local ti, tj = mouseOverTile()
+    local tx, ty = mouseOverTile()
 
     if not self.camtriggerI then
         drawMouseOverTile({1,0.75,0})
-    elseif ti then
+    elseif tx then
 		local room = activeRoom()
-        local i, j, w, h = rectCont2Tiles(ti, tj, self.camtriggerI, self.camtriggerJ)
+        local i, j, w, h = rectCont2Tiles(tx, ty, self.camtriggerI, self.camtriggerJ)
         drawColoredRect(room.x+i*8, room.y+j*8, w*8, h*8, {1, 0.75, 0}, false)
     end
 end
 
 function tool:mousepressed(x, y, button)
-    local ti, tj = mouseOverTile()
-    if not ti then return end
+    local tx, ty = mouseOverTile()
+    if not tx then return end
 
     local hovered=hoveredTriggerN()
     if button == 1 then
@@ -44,7 +44,7 @@ function tool:mousepressed(x, y, button)
                 app.selectedCamtriggerN = hovered
             end
             if selectedTrigger() then
-                self.camtriggerMoveI, self.camtriggerMoveJ = ti, tj
+                self.camtriggerMoveI, self.camtriggerMoveJ = tx, ty
             end
         else
             local hovered = hoveredTriggerN()
@@ -54,7 +54,7 @@ function tool:mousepressed(x, y, button)
             elseif hovered then
                 app.selectedCamtriggerN = hovered
             else
-                self.camtriggerI, self.camtriggerJ = ti, tj
+                self.camtriggerI, self.camtriggerJ = tx, ty
             end
         end
     elseif button == 2 and love.keyboard.isDown("lctrl") then
@@ -62,48 +62,48 @@ function tool:mousepressed(x, y, button)
             app.selectedCamtriggerN = hovered
         end
         if selectedTrigger() then
-            self.camtriggerSideI = sign(ti - selectedTrigger().x - selectedTrigger().w/2)
-            self.camtriggerSideJ = sign(tj - selectedTrigger().y - selectedTrigger().h/2)
+            self.camtriggerSideI = sign(tx - selectedTrigger().x - selectedTrigger().w/2)
+            self.camtriggerSideJ = sign(ty - selectedTrigger().y - selectedTrigger().h/2)
         end
-        -- app.camtriggerSideI,app.camtriggerSideJ=ti,tj
+        -- app.camtriggerSideI,app.camtriggerSideJ=tx,ty
     end
 end
 
 function tool:mousemoved(x,y)
-    local ti,tj = mouseOverTile()
-    if not ti then return end
+    local tx,ty = mouseOverTile()
+    if not tx then return end
 
     local trigger = selectedTrigger()
 
     if self.camtriggerMoveI then
-        trigger.x=trigger.x+(ti-self.camtriggerMoveI)
-        trigger.y=trigger.y+(tj-self.camtriggerMoveJ)
-        self.camtriggerMoveI,self.camtriggerMoveJ=ti,tj
+        trigger.x=trigger.x+(tx-self.camtriggerMoveI)
+        trigger.y=trigger.y+(ty-self.camtriggerMoveJ)
+        self.camtriggerMoveI,self.camtriggerMoveJ=tx,ty
     end
     if self.camtriggerSideI then
         if self.camtriggerSideI < 0 then
-            local newx = math.min(ti, trigger.x + trigger.w-1)
+            local newx = math.min(tx, trigger.x + trigger.w-1)
             trigger.w = trigger.x - newx + trigger.w
             trigger.x = newx
         else
-            trigger.w = math.max(ti - trigger.x + 1, 1)
+            trigger.w = math.max(tx - trigger.x + 1, 1)
         end
         if self.camtriggerSideJ < 0 then
-            local newy = math.min(tj, trigger.y + trigger.h - 1)
+            local newy = math.min(ty, trigger.y + trigger.h - 1)
             trigger.h = trigger.y - newy + trigger.h
             trigger.y = newy
         else
-            trigger.h = math.max(tj - trigger.y + 1, 1)
+            trigger.h = math.max(ty - trigger.y + 1, 1)
         end
     end
 end
 
 function tool:mousereleased(x, y, button)
-    local ti, tj = mouseOverTile()
+    local tx, ty = mouseOverTile()
 
-    if ti and self.camtriggerI then
+    if tx and self.camtriggerI then
         local room = activeRoom()
-        local i0, j0, w, h = rectCont2Tiles(self.camtriggerI, self.camtriggerJ, ti, tj)
+        local i0, j0, w, h = rectCont2Tiles(self.camtriggerI, self.camtriggerJ, tx, ty)
         local trigger={x=i0,y=j0,w=w,h=h,off_x="0",off_y="0"}
         table.insert(room.camtriggers, trigger)
         app.selectedCamtriggerN = #room.camtriggers

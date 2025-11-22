@@ -3,6 +3,8 @@ filedialog = require("code/filedialog")
 serpent = require("libraries/serpent")
 class = require("libraries/30log")
 
+require("main/globals")
+
 require("code/util")
 require("code/room")
 require("code/autotiles")
@@ -39,9 +41,9 @@ function mouseOverTile()
     if activeRoom() then
         local x, y = love.mouse.getPosition()
         local mx, my = fromScreen(x, y)
-        local ti, tj = div8(mx - activeRoom().x), div8(my - activeRoom().y)
-        if ti >= 0 and ti < activeRoom().w and tj >= 0 and tj < activeRoom().h then
-            return ti, tj
+        local tx, ty = div8(mx - activeRoom().x), div8(my - activeRoom().y)
+        if tx >= 0 and tx < activeRoom().w and ty >= 0 and ty < activeRoom().h then
+            return tx, ty
         end
     end
 end
@@ -49,19 +51,19 @@ end
 function drawMouseOverTile(col, tile)
     local col = col or {0, 1, 0.5}
 
-    local ti, tj = mouseOverTile()
-    if ti then
+    local tx, ty = mouseOverTile()
+    if tx then
         love.graphics.setColor(1, 1, 1)
         if tile then
-            local x, y=activeRoom().x + ti*8, activeRoom().y + tj*8
+            local x, y=activeRoom().x + tx*8, activeRoom().y + ty*8
             love.graphics.draw(p8data.spritesheet, p8data.quads[tile], x,y)
             drawCompositeShape(tile,x,y)
         end
 
         love.graphics.setColor(col)
         love.graphics.setLineWidth(1 / app.camScale)
-        love.graphics.rectangle("line", activeRoom().x + ti*8 + 0.5 / app.camScale,
-                                        activeRoom().y + tj*8 + 0.5 / app.camScale, 8, 8)
+        love.graphics.rectangle("line", activeRoom().x + tx*8 + 0.5 / app.camScale,
+                                        activeRoom().y + ty*8 + 0.5 / app.camScale, 8, 8)
     end
 end
 
@@ -151,8 +153,8 @@ function hoveredTriggerN()
     local room=activeRoom()
     if room then
         for n, trigger in ipairs(room.camtriggers) do
-            local ti, tj = mouseOverTile()
-            if ti and ti>=trigger.x and ti<trigger.x+trigger.w and tj>=trigger.y and tj<trigger.y+trigger.h then
+            local tx, ty = mouseOverTile()
+            if tx and tx>=trigger.x and tx<trigger.x+trigger.w and ty>=trigger.y and ty<trigger.y+trigger.h then
                 return n
             end
         end

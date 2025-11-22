@@ -8,25 +8,25 @@ function tool:disabled()
 end
 
 function tool:draw()
-    local ti, tj = mouseOverTile()
+    local tx, ty = mouseOverTile()
 
     if not self.selectTileI then
         drawMouseOverTile()
-    elseif ti then
+    elseif tx then
 		local room = activeRoom()
-        local i, j, w, h = rectCont2Tiles(ti, tj, self.selectTileI, self.selectTileJ)
+        local i, j, w, h = rectCont2Tiles(tx, ty, self.selectTileI, self.selectTileJ)
         drawColoredRect(room.x+i*8, room.y+j*8, w*8, h*8, {0, 1, 0.5}, false)
     end
 end
 
 function tool:mousepressed(x, y, button)
-    local ti, tj = mouseOverTile()
+    local tx, ty = mouseOverTile()
     local mx, my = fromScreen(x, y)
 
     if button == 1 then
         if not project.selection then
-            if ti then
-                self.selectTileI, self.selectTileJ = ti, tj
+            if tx then
+                self.selectTileI, self.selectTileJ = tx, ty
             end
         else
             self.selectionMoveX,  self.selectionMoveY  = mx - project.selection.x, my - project.selection.y
@@ -36,12 +36,12 @@ function tool:mousepressed(x, y, button)
 end
 
 function tool:mousereleased(x, y, button)
-    local ti, tj = mouseOverTile()
+    local tx, ty = mouseOverTile()
 
-    if ti and self.selectTileI then
+    if tx and self.selectTileI then
         placeSelection()
 
-        select(ti, tj, self.selectTileI, self.selectTileJ)
+        select(tx, ty, self.selectTileI, self.selectTileJ)
     end
 
     if project.selection and self.selectionMoveX then

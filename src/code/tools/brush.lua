@@ -11,19 +11,19 @@ function tool:update(dt)
             n = 0
         end
 
-        local ti, tj = mouseOverTile()
-        if not ti then return end
+        local tx, ty = mouseOverTile()
+        if not tx then return end
 
         local room = activeRoom()
 
         if love.keyboard.isDown("lshift","rshift") and love.mouse.isDown(2) then
             --select tile from map with shift+click
-            app.currentTile=activeRoom().data[ti][tj]
+            app.currentTile=activeRoom().data[tx][ty]
         else
-            activeRoom().data[ti][tj] = n
+            activeRoom().data[tx][ty] = n
 
             if app.autotile then
-                autotileWithNeighbors(activeRoom(), ti, tj, app.autotile)
+                autotileWithNeighbors(activeRoom(), tx, ty, app.autotile)
             end
         end
     end

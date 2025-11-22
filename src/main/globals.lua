@@ -1,0 +1,4 @@
+TYPE_STRING="String"
+TYPE_BOOL="Bool"
+TYPE_VECTOR="Vector"
+TYPE_EXIT="Exit"

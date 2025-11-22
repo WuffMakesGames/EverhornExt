@@ -56,14 +56,50 @@ function tool:panel()
 		end
 
 		-- Level parameters =====================
-        for i=1, param_n do
-            ui:layoutRow("dynamic", 25*global_scale, {0.25,0.75} )
-            ui:label(project.conf.param_names[i] or "")
+		for i = 1,param_n do
+			local param = project.conf.param_names[i] or {"", TYPE_STRING}
+			local format = param[2]
 
-            local t = {value=room.params[i] or 0}
-            ui:edit("field", t)
-            room.params[i] = t.value
-        end
+			-- String
+			if format==TYPE_STRING then
+				local t = {value=tostring(room.params[i] or "")}
+
+				ui:layoutRow("dynamic", 25*global_scale, {0.25,0.75})
+				ui:label(param[1])
+				ui:edit("field", t)
+				room.params[i] = t.value
+
+			-- Boolean
+			elseif format==TYPE_BOOL then
+				ui:layoutRow("dynamic", 25*global_scale, {0.25,0.75})
+				ui:label(param[1])
+				room.params[i] = tostring(ui:checkbox("", tobool(room.params[i])))
+			
+			-- Vector
+			elseif format==TYPE_VECTOR then
+				ui:layoutRow("dynamic", 25*global_scale, {0.25,0.375,0.375})
+				ui:label(param[1])
+
+				local x,y = unpack(split(room.params[i] or "0|0", "|"))
+				local val_x,val_y = {value=tostring(x)}, {value=tostring(y)}
+				ui:edit("field", val_x)
+				ui:edit("field", val_y)
+				x,y = tonumber(val_x.value) or 0,tonumber(val_y.value) or 0
+				room.params[i] = x.."|"..y
+
+			-- Exit
+			elseif format==TYPE_EXIT then
+				ui:layoutRow("dynamic", 25*global_scale, 5)
+				ui:label(param[1])
+
+				-- local exit,exit_names = "",{"left","bottom","right","top"}
+				-- local exits = split(room.params[i], "|")
+				-- for ii,v in pairs() do
+				-- 	exit = exit..ui:checkbox(v, room.exits[v] or false)
+				-- 	room.exits[v] = 
+				-- end
+			end
+		end
     end
 end
 

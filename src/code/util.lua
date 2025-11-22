@@ -1,6 +1,6 @@
 local utf8 = require("utf8")
 
-function rgb(r,g,b) return { r,g,b } end
+function rgb(r,g,b) return { r/255,g/255,b/255 } end
 function isempty(t)
     for k, v in pairs(t) do
         return false
@@ -27,6 +27,12 @@ function tohex_swapnibbles(b)
     return hext[b%16]..hext[math.floor(b/16)]
 end
 
+function tobool(x)
+	if x=="true" then return true end
+	if x=="false" then return false end
+	if type(x)=="number" then return x>0 end
+	return x~=false and x~=nil
+end
 
 local b256_chars = {
     "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "\t", "\n", "ᵇ",
@@ -165,9 +171,9 @@ end
 
 -- emulate pico8's split
 -- split , sperated list, auto convert numbers to ints
-function split(str)
+function split(str,delim)
     local tbl={}
-    for val in string.gmatch(str, '([^,]+)') do
+    for val in string.gmatch(str, '([^'..(delim or ",")..']+)') do
         if tonumber(val) ~= nil then
             val=tonumber(val)
         end

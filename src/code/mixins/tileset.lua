@@ -158,8 +158,8 @@ function mixin:composite()
 			end
 		end
 
-        -- ui:layoutRow("dynamic", 50*global_scale, 1)
-        -- ui:label("Autotile draws with the 16 tiles on the left, connecting them to each other and to any of the extra tiles on the right. This allows connecting to other deco tiles and tiles from other tilesets. Also works when erasing.", "wrap")
+        ui:layoutRow("dynamic", 50*global_scale, 1)
+        ui:label("Composite shapes are editor-only utilities that can be used to visualize multi-tile objects in your levels. Only the center tile is placed in a level, the rest is rendered in the editor.", "wrap")
     end
 end
 

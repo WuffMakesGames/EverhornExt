@@ -57,7 +57,7 @@ function loadpico8(filename)
             local s = string.sub(line, 1 + i, 1 + i)
             local b = fromhex(s)
             local c = data.palette[b + 1]
-            spritesheet_data:setPixel(i, j, c[1]/255, c[2]/255, c[3]/255, 1)
+            spritesheet_data:setPixel(i, j, c[1], c[2], c[3], 1)
         end
     end
 
@@ -138,18 +138,26 @@ function loadpico8(filename)
         local param_string=evh:match("%-%-\"x,y,w,h,exit_dirs,?(.-)\"")
         data.conf.param_names = data.conf.param_names or split(param_string or "")
 
+		-- Load stuff
         local chunk, err = loadstring(evh)
         if not err then
             local env = {}
             chunk = setfenv(chunk, env)
             chunk()
 
-            levels, mapdata, camera_offsets = env.levels, env.mapdata, env.camera_offsets
+            levels, mapdata, camera_offsets = env.levels, env.mapdata, env.camera_offsets or env.triggers
         end
     end
     -- parameter names default to none
 	if data.conf.include_exits == nil then data.conf.include_exits = true end
     data.conf.param_names = data.conf.param_names or {}
+
+	-- Convert parameter strings to tables (old -> new format)
+	for i,v in ipairs(data.conf.param_names) do
+		if type(v)=="string" then
+			data.conf.param_names[i] = {v, TYPE_STRING}
+		end
+	end
 
     -- flatten levels and mapdata
     local lvls = {}
@@ -247,19 +255,24 @@ function loadpico8(filename)
         end
     end
 
+	-- Parse triggers ===========================
     if camera_offsets then
-        for n,tbl in pairs(camera_offsets) do
-            for _,t in pairs(tbl) do
-                args={}
-                -- strip leading and trailing whitespace
-                for d in t:gmatch("%s*[^,]+%s*") do
-                    -- off_x and off_y are strings and not numbers
-                    table.insert(args,#args<4 and tonumber(d) or d)
-                end
-                if data.rooms[n] then
-                    table.insert(data.rooms[n].camtriggers,{x=args[1],y=args[2],w=args[3],h=args[4],off_x=args[5],off_y=args[6]})
-                end
-            end
+        for n,val in pairs(camera_offsets) do
+			if type(val) == "string" then
+				val = split(val, "|")
+			end
+
+			for _,tbl in pairs(val) do
+				args={}
+				-- strip leading and trailing whitespace
+				-- off_x and off_y are strings and not numbers
+				for d in tbl:gmatch("%s*[^,]+%s*") do
+					table.insert(args,#args<4 and tonumber(d) or d)
+				end
+				if data.rooms[n] then
+					table.insert(data.rooms[n].camtriggers,{x=args[1],y=args[2],w=args[3],h=args[4],off_x=args[5],off_y=args[6]})
+				end
+			end
         end
     end
     return data
@@ -348,11 +361,12 @@ function savePico8(filename)
 
 		-- Level triggers =======================
         if room.camtriggers then
-            camera_offsets[n]={}
+            camera_offsets[n]=""
             for _,t in pairs(room.camtriggers) do
-                local trigger_str = string.format("%d,%d,%d,%d,%s,%s",t.x,t.y,t.w,t.h,t.off_x,t.off_y)
-                table.insert(camera_offsets[n],trigger_str)
+				local trigger_str = string.format("%d,%d,%d,%d,%s,%s|",t.x,t.y,t.w,t.h,t.off_x,t.off_y)
+				camera_offsets[n] = camera_offsets[n]..trigger_str
             end
+			camera_offsets[n] = camera_offsets[n]:sub(1,#camera_offsets[n]-1)
         end
     end
 
@@ -446,7 +460,9 @@ function savePico8(filename)
             return a..dumplua(mapdata)..b
         end
     )
+
     cartdata = cartdata:gsub("(%-%-@begin.*camera_offsets%s*=%s*)%b{}(.*%-%-@end)","%1"..dumplua(camera_offsets).."%2")
+    cartdata = cartdata:gsub("(%-%-@begin.*triggers%s*=%s*)%b{}(.*%-%-@end)","%1"..dumplua(camera_offsets).."%2")
 
     --remove playtesting inject if one already exists:
     cartdata = cartdata:gsub("(%-%-@begin.*)local __init.-\n(.*%-%-@end)","%1".."%2")

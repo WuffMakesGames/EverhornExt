@@ -191,6 +191,8 @@ function love.update(dt)
 end
 
 function love.draw()
+
+	-- Set state ================================
     love.graphics.clear(0.25, 0.25, 0.25)
     love.graphics.reset()
     love.graphics.setLineStyle("rough")
@@ -201,7 +203,8 @@ function love.draw()
     local ox, oy = toScreen(0, 0)
     love.graphics.translate(math.floor(ox), math.floor(oy))
     love.graphics.scale(app.camScale)
-
+	
+	-- Background grid ==========================
     love.graphics.setColor(0.28, 0.28, 0.28)
     love.graphics.setLineWidth(2)
     for i = 0, 7 do
@@ -210,6 +213,7 @@ function love.draw()
         end
     end
 
+	-- Draw rooms ===============================
     for n, room in ipairs(project.rooms) do
         if room ~= activeRoom() then
             drawRoom(room, p8data)
@@ -227,6 +231,7 @@ function love.draw()
             end
         end
     end
+
     if activeRoom() then
         local room = activeRoom()
         drawRoom(room, p8data)
@@ -241,6 +246,8 @@ function love.draw()
             love.graphics.pop()
         end
     end
+	
+	-- Draw selection ===========================
     if project.selection then
         drawRoom(project.selection, p8data, true)
         love.graphics.setColor(0, 1, 0.5)
@@ -248,13 +255,20 @@ function love.draw()
         love.graphics.rectangle("line", project.selection.x + 0.5 / app.camScale, project.selection.y + 0.5 / app.camScale, project.selection.w*8, project.selection.h*8)
     end
 
-    -- tool draw
+	-- Draw tool ================================
     app.tool:draw()
 
+	-- Reset ====================================
     love.graphics.reset()
     love.graphics.setColor(1, 1, 1)
     love.graphics.translate(app.left, app.top)
     love.graphics.setFont(app.font)
+
+	-- Messages =================================
+	local tx,ty = mouseOverTile()
+	if tx and ty then
+		printbg("x:"..tx.." y:"..ty, 4, app.H - app.font:getHeight() - 4, rgb(255, 255, 255), rgb(0,0,0))
+	end
 
     if app.message then
         printbg(app.message, 4, app.H - app.font:getHeight() - 4, {0, 1, 0.5}, {0, 0, 0})
@@ -264,5 +278,7 @@ function love.draw()
         local s = app.playtesting == 1 and "[playtesting]" or "[playtesting, 2 dashes]"
         printbg(s, 4, 4, {0, 1, 0.5}, {0, 0, 0})
     end
+
+	-- Nuklear UI ===============================
     ui:draw()
 end

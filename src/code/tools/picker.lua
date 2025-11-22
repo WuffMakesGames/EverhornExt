@@ -2,7 +2,10 @@ local tool = Tool:extend("Brush")
 
 -- Methods ======================================
 function tool:update(dt)
-    if not ui:windowIsAnyHovered() and not love.keyboard.isDown("lalt") and not app.suppressMouse and (love.mouse.isDown(1) or love.mouse.isDown(2)) then
+    if not ui:windowIsAnyHovered()
+    and not love.keyboard.isDown("lalt")
+    and not app.suppressMouse
+    and (love.mouse.isDown(1) or love.mouse.isDown(2)) then
         local n = app.currentTile
         if love.mouse.isDown(2) then
             n = 0

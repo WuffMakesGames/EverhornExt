@@ -12,4 +12,5 @@ end
 -- Return =======================================
 export_base256 = add_format("code/formats/base256")
 export_hex = add_format("code/formats/hex")
+export_rom = add_format("code/formats/rom")
 return formats

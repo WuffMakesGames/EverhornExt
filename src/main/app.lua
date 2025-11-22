@@ -16,6 +16,7 @@ return function()
 
 		currentTile = 0,
 		currentTool = "Brush",
+		tempTool = nil,
 
 		message = nil,
 		messageTimeLeft = nil,

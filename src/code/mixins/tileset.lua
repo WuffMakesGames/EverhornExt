@@ -158,9 +158,9 @@ function mixin:composite()
 			end
 		end
 
-        ui:layoutRow("dynamic", 50*global_scale, 1)
-        ui:label("Composite shapes are editor-only utilities that can be used to visualize multi-tile objects in your levels. Only the center tile is placed in a level, the rest is rendered in the editor.", "wrap")
-    end
+		ui:layoutRow("dynamic", 50*global_scale, 1)
+		ui:label("Composite shapes are editor-only utilities that can be used to visualize multi-tile objects in your levels. Only the center tile is placed in a level, the rest is rendered in the editor.", "wrap")
+	end
 end
 
 -- Return =======================================

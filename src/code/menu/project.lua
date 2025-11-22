@@ -6,17 +6,21 @@ function tool:panel()
     if ui:button("Open") then openFile() end
     if ui:button("Save") then saveFile(false) end
     if ui:button("Save as...") then saveFile(true) end
-
+    
 	-- String format ============================
     ui:layoutRow("dynamic", 25*global_scale, 2)
     ui:label("Encode string levels as:")
 	project.conf.format = formats.names[ui:combobox(table_pos(formats.names,project.conf.format), formats.names)]
+
+	ui:layoutRow("dynamic", 50*global_scale, 1)
+	ui:label(formats[project.conf.format].desc,"wrap")
 
 	-- Background ==============================
 	local backgrounds = { "(None)" }
 	for i,v in ipairs(project.conf.backgrounds) do table.insert(backgrounds, v) end
 	table.insert(backgrounds, "Add background...")
 
+    ui:layoutRow("dynamic", 25*global_scale, 2)
 	ui:label("Background:")
 	local bg = backgrounds[ui:combobox(table_pos(backgrounds, app.background), backgrounds)]
 	if bg ~= app.background then
@@ -42,6 +46,9 @@ function tool:panel()
 				app.background_image = love.graphics.newImage(image_data)
 				app.background_image:setFilter("nearest")
 			end
+		-- Unload background
+		else
+			app.background_image = nil
 		end
 	end
 

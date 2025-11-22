@@ -1,6 +1,6 @@
 local format = {}
-format.name = "Hex"
-format.desc = "Stores level data in a hexadecimal format"
+format.name = "Rom"
+format.desc = "ROM format will export mapdata as a separate cart alongside your original cart. This can then be loaded into memory using reload() in PICO-8"
 
 -- Methods ======================================
 function format.load(room, levelstr)

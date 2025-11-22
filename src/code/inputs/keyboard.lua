@@ -23,22 +23,16 @@ function love.keypressed(key, scancode, isrepeat)
         end
     end
 
-
-
     if ui:keypressed(key, scancode, isrepeat) then
         return
     end
 
-
-
     -- shortcuts that nuklear windows swallow
-
     if key == "return" then
         app.enterPressed = true
     end
 
     -- first handle actions that are allowed to repeat when holding key
-
     local dx, dy = 0, 0
     if key == "left" then dx = -1 end
     if key == "right" then dx = 1 end
@@ -166,17 +160,25 @@ function love.keypressed(key, scancode, isrepeat)
             if err then
                 showMessage("Failed to paste (did you paste something you're not supposed to?)")
             end
+		
+		-- Select all [Ctrl+A] ==================
         elseif key == "a" then
             if activeRoom() then
 				app.currentTool = "Selection"
                 select(0, 0, activeRoom().w - 1, activeRoom().h - 1)
             end
+		
+		-- Show Tiles [Ctrl+H] ==================
         elseif key=="h" then
             app.showExtraTiles=not app.showExtraTiles
+		
+		-- Show Triggers [Ctrl+T] ===============
         elseif key=="t" then
             app.showCameraTriggers=not app.showCameraTriggers
         end
-    else -- if ctrl is not down
+
+	-- Control isn't pressed ====================
+    else
         if key == "delete" and love.keyboard.isDown("lshift") then
             if activeRoom() then
                 table.remove(project.rooms, app.room)
@@ -184,16 +186,15 @@ function love.keypressed(key, scancode, isrepeat)
                     app.room = #project.rooms
                 end
             end
+
         elseif key == "return" then
             placeSelection()
+
         elseif key == "tab" and not love.keyboard.isDown("lalt") then
-            if not app.playtesting then
-                app.playtesting = 1
-            elseif app.playtesting == 1 then
-                app.playtesting = 2
-            else
-                app.playtesting = false
-            end
+            if not app.playtesting then app.playtesting = 1
+            elseif app.playtesting == 1 then app.playtesting = 2
+			else app.playtesting = false end
+
         elseif key == "delete" then
             local room=activeRoom()
             if app.selectedCamtriggerN and room then

@@ -1,5 +1,6 @@
 local format = {}
 format.name = "Base256"
+format.desc = "Stores level data in a base256 character format"
 
 -- Methods ======================================
 local utf8 = require("utf8")

@@ -14,9 +14,9 @@ formats = require("code/formats")
 
 -- New Project ==================================
 function newProject()
-    app = require("main/app")
-    project = require("main/project")
-    p8data = require("main/p8data")
+    app = require("main/app")()
+    project = require("main/project")()
+    p8data = require("main/p8data")()
 
 	-- User interface ===========================
     love.graphics.setNewFont(12*global_scale)

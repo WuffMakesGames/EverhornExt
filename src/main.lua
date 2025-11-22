@@ -8,7 +8,9 @@ require("code.util")
 require("code.room")
 require("code.autotiles")
 require("code.tools")
-require("code.ui_helpers")
+require("code.ui")
+require("code.pico8")
+require("code.fileio")
 formats = require("code.formats")
 
 -- New Project ==================================
@@ -208,7 +210,6 @@ function redo()
     if not activeRoom() then app.room = nil end
 end
 
-require("code.fileio")
 require("code.inputs.keyboard")
 require("code.inputs.mouse")
 require("mainloop")

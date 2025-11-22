@@ -25,15 +25,5 @@ function format.dump(room)
     return s
 end
 
--- Converts romdata to mapdata
-function format.fetchrom(rom)
-
-end
-
--- Converts mapdata to romdata
-function format.saverom(map)
-
-end
-
 -- Return =======================================
 return format

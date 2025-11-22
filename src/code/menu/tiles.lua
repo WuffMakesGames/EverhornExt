@@ -1,9 +1,8 @@
 local tool = Tool:extend("Tiles"):with(require("code/mixins/tileset"))
-local toolslist = { "Brush", "Rectangle", "Selection", "Picker" }
+local toolslist = { "Brush", "Rectangle", "Selection" }
 tool.Brush 		= require("code/tools/brush")
 tool.Rectangle 	= require("code/tools/rectangle")
 tool.Selection 	= require("code/tools/select")
-tool.Picker		= require("code/tools/picker")
 
 -- Methods ======================================
 function tool:panel()

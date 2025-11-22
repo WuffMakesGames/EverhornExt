@@ -60,7 +60,7 @@ function love.keypressed(key, scancode, isrepeat)
 
 	-- Test project [f5] ========================
 	-- if key == "f5" then
-	-- 	savePico8("tempfile.p8")
+	-- 	savepico8("tempfile.p8")
 	-- 	love.filesystem.write("executable_path", app.executable_path)
 	-- 	local path = '"'..app.executable_path..'"'
 	-- 	io.popen(path.." -run ".."tempfile.p8")

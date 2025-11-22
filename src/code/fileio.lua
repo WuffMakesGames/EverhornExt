@@ -1,5 +1,4 @@
 -- functions to read lines correctly for \r\n line endings
-
 local function cr_lines(s)
     return s:gsub('\r\n?', '\n'):gmatch('(.-)\n')
 end
@@ -297,7 +296,7 @@ function openPico8(filename)
     return true
 end
 
-function savePico8(filename)
+function savepico8(filename)
     local map = fill2d0s(128, 64)
 
     --boolean 128x64 table which marks which tiles are part of rooms
@@ -513,7 +512,7 @@ function saveFile(as)
         filename = filedialog.get_path("p8", "PICO-8")
     end
 
-    if filename and savePico8(filename) then
+    if filename and savepico8(filename) then
         showMessage("Saved "..string.match(filename, "/([^/]*)$"))
 
         app.saveFileName = filename

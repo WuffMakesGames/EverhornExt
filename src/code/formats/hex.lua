@@ -1,6 +1,6 @@
 local format = {}
 format.name = "Hex"
-format.desc = "Stores level data in a hexadecimal format"
+format.desc = "Stores level data in a hexadecimal format. You can use tonum(hex, 0x1) to get the value from hex."
 
 -- Methods ======================================
 function format.load(room, levelstr)

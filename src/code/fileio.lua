@@ -305,22 +305,21 @@ function savePico8(filename)
     for i=0,127 do is_room[i]={} end
 
     for _, room in ipairs(project.rooms) do
-	if not room.is_string then
-		local i0, j0 = div8(room.x), div8(room.y)
-		for i = 0, room.w - 1 do
-		for j = 0, room.h - 1 do
-			if map[i0+i] then
-				map[i0+i][j0+j] = room.data[i][j]
-				is_room[i0+i][j0+j]=true
-			end
-		end end
-	end end
+		if not room.is_string then
+			local i0, j0 = div8(room.x), div8(room.y)
+			for i = 0, room.w - 1 do
+			for j = 0, room.h - 1 do
+				if map[i0+i] then
+					map[i0+i][j0+j] = room.data[i][j]
+					is_room[i0+i][j0+j]=true
+				end
+			end end
+		end
+	end
 
     -- use current cart as base
     file = io.open(app.openFileName, "rb")
-    if not file then
-        return false
-    end
+    if not file then return false end
 
     local out = {}
     local ln = 1
@@ -487,9 +486,7 @@ function openFile()
     local openOk = false
     if filename then
         local ext = string.match(filename, ".(%w+)$")
-        if ext == "ahm" then
-            openOk = openMap(filename)
-        elseif ext == "p8" then
+        if ext == "p8" then
             openOk = openPico8(filename)
         end
 

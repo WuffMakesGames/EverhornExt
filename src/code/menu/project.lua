@@ -6,14 +6,7 @@ function tool:panel()
     if ui:button("Open") then openFile() end
     if ui:button("Save") then saveFile(false) end
     if ui:button("Save as...") then saveFile(true) end
-    
-	-- String format ============================
-    ui:layoutRow("dynamic", 25*global_scale, 2)
-    ui:label("Encode string levels as:")
-	project.conf.format = formats.names[ui:combobox(table_pos(formats.names,project.conf.format), formats.names)]
-
-	ui:layoutRow("dynamic", 50*global_scale, 1)
-	ui:label(formats[project.conf.format].desc,"wrap")
+	ui:layoutRow("dynamic", 10*global_scale, 1)
 
 	-- Background ==============================
 	local backgrounds = { "(None)" }
@@ -51,6 +44,15 @@ function tool:panel()
 			app.background_image = nil
 		end
 	end
+    
+	-- String format ============================
+    ui:layoutRow("dynamic", 25*global_scale, 2)
+    ui:label("Encode string levels as:")
+	project.conf.format = formats.names[ui:combobox(table_pos(formats.names,project.conf.format), formats.names)]
+
+	ui:layoutRow("dynamic", 10*global_scale, 1)
+	ui:layoutRow("dynamic", 40*global_scale, 1)
+	ui:label(formats[project.conf.format].desc,"wrap")
 
 	-- Options ==================================
     ui:layoutRow("dynamic", 25*global_scale, 1)

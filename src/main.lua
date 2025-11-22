@@ -1,22 +1,21 @@
-nuklear = require("nuklear")
-filedialog = require("code/filedialog")
-serpent = require("libraries/serpent")
-class = require("libraries/30log")
+nuklear =	 require("nuklear")
+filedialog 	= require("code.filedialog")
+serpent 	= require("libraries.serpent")
+class 		= require("libraries.30log")
 
-require("main/globals")
-
-require("code/util")
-require("code/room")
-require("code/autotiles")
-require("code/tools")
-require("code/ui_helpers")
-formats = require("code/formats")
+require("main.globals")
+require("code.util")
+require("code.room")
+require("code.autotiles")
+require("code.tools")
+require("code.ui_helpers")
+formats = require("code.formats")
 
 -- New Project ==================================
 function newProject()
-    app = require("main/app")()
-    project = require("main/project")()
-    p8data = require("main/p8data")()
+    app 	= require("main.app")()
+    p8data 	= require("main.p8data")()
+    project = require("main.project")()
 
 	-- User interface ===========================
     love.graphics.setNewFont(12*global_scale)
@@ -209,7 +208,7 @@ function redo()
     if not activeRoom() then app.room = nil end
 end
 
-require("code/fileio")
-require("code/inputs/keyboard")
-require("code/inputs/mouse")
+require("code.fileio")
+require("code.inputs.keyboard")
+require("code.inputs.mouse")
 require("mainloop")

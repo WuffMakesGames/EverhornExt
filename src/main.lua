@@ -9,8 +9,8 @@ require("code.room")
 require("code.autotiles")
 require("code.tools")
 require("code.ui")
-require("code.pico8")
 require("code.fileio")
+require("code.pico8")
 formats = require("code.formats")
 
 -- New Project ==================================

@@ -1,6 +1,6 @@
 local format = {}
 format.name = "Rom"
-format.desc = "ROM format will export mapdata as a separate cart alongside your original cart. This can then be loaded into memory using reload() in PICO-8."
+format.desc = "ROM format will export mapdata as a separate cart alongside your game. This can then be loaded into memory using reload() in PICO-8. This exports all strings as if they were a single map. You may lose data if rooms overlap or are out of bounds."
 format.isrom = true
 
 -- Methods ======================================

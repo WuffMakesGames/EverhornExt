@@ -1,14 +1,14 @@
--- functions to read lines correctly for \r\n line endings
-local function cr_lines(s)
-    return s:gsub('\r\n?', '\n'):gmatch('(.-)\n')
+-- Fix /r/n newline format
+function cr_lines(str)
+    return str:gsub('\r\n?', '\n'):gmatch('(.-)\n')
 end
 
-local function cr_file_lines(file)
-    local s = file:read('*a')
-    if s:sub(#s, #s) ~= "\n" then
-        s = s .. "\n"
+function cr_file_lines(file)
+    local str = file:read('*a')
+    if str:sub(#str, #str) ~= "\n" then
+        str = str.."\n"
     end
-    return cr_lines(s)
+    return cr_lines(str)
 end
 
 -- file handling
@@ -371,6 +371,8 @@ function savepico8(filename)
     -- map section
     -- start out by making sure both sections exist, and are sized to max size
     local gfxexist, mapexist=false,false
+
+	-- Find sections
     for k = 1, #out do
         if out[k] == "__gfx__" then
             gfxexist=true
@@ -379,13 +381,11 @@ function savepico8(filename)
         end
     end
 
-    if not gfxexist then
-        table.insert(out,"__gfx__")
-    end
-    if not mapexist then
-        table.insert(out,"__map__")
-    end
+	-- Insert sections if not found
+    if not gfxexist then table.insert(out,"__gfx__") end
+    if not mapexist then table.insert(out,"__map__") end
 
+	-- Resize sections to max
     for k,v in ipairs(out) do
         if out[k]=="__gfx__" or out[k]=="__map__" then
             local j=k+1
@@ -401,6 +401,7 @@ function savepico8(filename)
             end
         end
     end
+
     local gfxstart, mapstart
     for k = 1, #out do
         if out[k] == "__gfx__" then
@@ -409,10 +410,11 @@ function savepico8(filename)
             mapstart = k
         end
     end
-    if not (mapstart and gfxstart) then
-        error("uuuh")
-    end
 
+	-- Neither exist, shouldn't be possible
+    if not (mapstart and gfxstart) then error("uuuh") end
+
+	-- MAPDATA [MAP]
     for j = 0, 31 do
         local line = ""
         for i = 0, 127 do
@@ -420,13 +422,16 @@ function savepico8(filename)
         end
         out[mapstart+j+1] = line
     end
+
+	-- MAPDATA [SPRITESHEET]
     for j = 32, 63 do
         local gfxline=out[gfxstart+(j-32)*2+65]..out[gfxstart+(j-32)*2+66]
         local line = ""
         for i = 0, 127 do
-            --build mapdata string, but for values that aren't part of a room, perserve the spritesheet data
+            -- Overwrite hex with map
             if is_room[i][j] then
                 line = line .. tohex_swapnibbles(map[i][j])
+			-- Copy hex from file
             else
                 line= line .. gfxline:sub(2*i+1,2*i+2)
             end
@@ -435,8 +440,10 @@ function savepico8(filename)
         out[gfxstart+(j-32)*2+66] = string.sub(line, 129, 256)
     end
 
-    local cartdata=table.concat(out, "\n") .. "\n"
     -- newline at the end to match vanilla carts
+    local cartdata=table.concat(out, "\n") .. "\n"
+
+	-- ! Code injections !
 
     -- add configuration block if missing
     if not cartdata:match("__meta:everhorn__") then
@@ -473,6 +480,7 @@ function savepico8(filename)
         cartdata=cartdata:gsub("%-%-@end",inject.."\n--@end")
     end
 
+	-- Save file
     file = io.open(filename, "wb")
     file:write(cartdata)
     file:close()

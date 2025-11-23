@@ -200,8 +200,19 @@ function printbg(text, x, y, fgcol, bgcol, centerx, centery)
     love.graphics.print(text, x, y)
 end
 
+-- TABLES 
 function table_pos(table,v)
 	for i,item in ipairs(table) do
 		if item == v then return i end
 	end
+end
+
+function table_2d(width, height, value)
+	local t = {}
+	for x = 0,width-1 do
+		t[x] = {}
+	for y = 0,height-1 do
+		t[x][y] = value or 0
+	end end
+	return t
 end

@@ -51,7 +51,7 @@ function tool:panel()
 	project.conf.format = formats.names[ui:combobox(table_pos(formats.names,project.conf.format), formats.names)]
 
 	ui:layoutRow("dynamic", 10*global_scale, 1)
-	ui:layoutRow("dynamic", 40*global_scale, 1)
+	ui:layoutRow("dynamic", 50*global_scale, 1)
 	ui:label(formats[project.conf.format].desc,"wrap")
 
 	-- Options ==================================

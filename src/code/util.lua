@@ -211,8 +211,9 @@ function table_2d(width, height, value)
 	local t = {}
 	for x = 0,width-1 do
 		t[x] = {}
-	for y = 0,height-1 do
-		t[x][y] = value or 0
-	end end
+		for y = 0,height-1 do
+			t[x][y] = value
+		end
+	end
 	return t
 end

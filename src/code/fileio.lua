@@ -12,7 +12,7 @@ function cr_file_lines(file)
 end
 
 -- file handling
-function loadpico8(filename)
+function _loadpico8(filename)
     love.graphics.setDefaultFilter("nearest", "nearest")
 
     local file, err = io.open(filename, "rb")
@@ -36,6 +36,8 @@ function loadpico8(filename)
         end
     end
     file:close()
+
+	-- Load font
     local p8font=love.image.newImageData("assets/pico-8_font.png")
     local function toGrey(x,y,r,g,b,a)
         return r*194/255,g*195/255,b*199/255,a
@@ -49,6 +51,8 @@ function loadpico8(filename)
             return 8*(digit-9),48,4,8
         end
     end
+
+	-- Load spritesheet
     local spritesheet_data = love.image.newImageData(128, 128)
     for j = 0, spritesheet_data:getHeight() - 1 do
         local line = sections["gfx"] and sections["gfx"][j + 1] or "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
@@ -60,6 +64,7 @@ function loadpico8(filename)
         end
     end
 
+	-- Garbage tiles
 	local spritesheet_data_alt = spritesheet_data:clone()
     for j =8,15 do
         for i = 0, 15 do
@@ -86,6 +91,7 @@ function loadpico8(filename)
     spritesheet_data_copy:mapPixel(function(x, y, r, g, b, a) if r == 0 and g == 0 and b == 0 then return 0, 0, 0, 0 else return r, g, b, a end end)
     data.spritesheet_noblack = love.graphics.newImage(spritesheet_data_copy)
 
+	-- Load mapdata
     data.map = {}
     for i = 0, 127  do
         data.map[i] = {}
@@ -278,25 +284,24 @@ function loadpico8(filename)
 end
 
 function openPico8(filename)
+	local data = loadpico8(filename)
+	if not data then return false end
+
+	-- Data loaded successfuly
     newProject()
+	p8data,project.rooms = data,data.rooms
 
-    -- loads into global p8data as well, for spritesheet
-    p8data = loadpico8(filename)
-    project.rooms = p8data.rooms
-
+    -- Load config safely
     for k, v in pairs(p8data.conf) do
         project.conf[k] = v
     end
-    print(dumplualine(project.conf))
-
     updateAutotiles()
 
     app.openFileName = filename
-
     return true
 end
 
-function savepico8(filename)
+function _savepico8(filename)
     local map = fill2d0s(128, 64)
 
     --boolean 128x64 table which marks which tiles are part of rooms
@@ -315,6 +320,10 @@ function savepico8(filename)
 			end end
 		end
 	end
+	-- DEBUG
+	-- print(dumplua(is_room))
+	-- if true then return end
+	-- /DEBUG
 
     -- use current cart as base
     file = io.open(app.openFileName, "rb")
@@ -329,6 +338,7 @@ function savepico8(filename)
     end
     file:close()
 
+	-- Generate code
     local levels, mapdata, camera_offsets = {}, {}, {}
     for n = 1, #project.rooms do
         local room = project.rooms[n]
@@ -481,20 +491,20 @@ function savepico8(filename)
     end
 
 	-- Save file
-    file = io.open(filename, "wb")
-    file:write(cartdata)
-    file:close()
-
-    return true
+    -- file = io.open(filename, "wb")
+    -- file:write(cartdata)
+    -- file:close()
+    return false
 end
 
 function openFile()
     local filename = filedialog.get_path("p8", "PICO-8")
-    local openOk = false
+    local openOk, err
+
     if filename then
         local ext = string.match(filename, ".(%w+)$")
         if ext == "p8" then
-            openOk = openPico8(filename)
+            openOk, err = openPico8(filename)
         end
 
         if openOk then
@@ -503,12 +513,13 @@ function openFile()
             pushHistory()
         end
     end
+
+	-- Success/Failure
     if openOk then
         showMessage("Opened "..string.match(filename, "/([^/]*)$"))
-
         app.saveFileName = filename
     else
-        showMessage("Failed to open file")
+        showMessage(err or "Failed to open file")
     end
 end
 

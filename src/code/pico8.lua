@@ -133,8 +133,7 @@ function loadpico8(filename)
 		if conf then
 			local chunk, err = loadstring(conf)
 			if not err then
-				chunk = setfenv(chunk, data.conf)
-				chunk()
+				setfenv(chunk, data.conf)()
 			end
 		end
 	end
@@ -151,9 +150,7 @@ function loadpico8(filename)
 		local chunk, err = loadstring(everhorn_chunk)
 		if not err then
 			local env = {}
-			chunk = setfenv(chunk, env)
-			chunk()
-
+			setfenv(chunk, env)()
 			levels, mapdata, triggers = env.levels, env.mapdata, env.triggers or env.camera_offsets
 		end
 	end

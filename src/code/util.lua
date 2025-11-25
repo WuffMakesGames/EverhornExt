@@ -1,6 +1,8 @@
 local utf8 = require("utf8")
 
-function rgb(r,g,b) return { r/255,g/255,b/255 } end
+function rgb(r,g,b) return rgba(r,g,b,1) end
+function rgba(r,g,b,a) return { r/255,g/255,b/255,a } end
+
 function isempty(t)
     for k, v in pairs(t) do
         return false

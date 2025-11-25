@@ -4,7 +4,7 @@ format.desc = "ROM format will export mapdata as a separate cart alongside your 
 format.isrom = true
 
 -- Methods ======================================
--- Loads string data into a room
+-- Loads hex 
 function format.load(room, levelstr)
     for i = 0, room.w - 1 do
         for j = 0, room.h - 1 do
@@ -14,7 +14,7 @@ function format.load(room, levelstr)
     end
 end
 
--- Converts roomdata to string data
+-- Converts mapdata to hex data
 function format.dump(room)
     local s = ""
     for j = 0, room.h - 1 do

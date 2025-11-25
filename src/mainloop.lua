@@ -192,7 +192,7 @@ end
 
 function love.draw()
 
-	-- Set state ================================
+	-- Set state
     love.graphics.clear(0.25, 0.25, 0.25)
     love.graphics.reset()
     love.graphics.setLineStyle("rough")
@@ -204,19 +204,35 @@ function love.draw()
     love.graphics.translate(math.floor(ox), math.floor(oy))
     love.graphics.scale(app.camScale)
 	
-	-- Background grid ==========================
-    love.graphics.setColor(0.28, 0.28, 0.28)
+	-- Draw background/grids
     love.graphics.setLineWidth(2)
+
+    love.graphics.setColor(rgba(53, 53, 53, 1))
+    love.graphics.rectangle("fill", 0, 0, 128*8, 128*4)
+    love.graphics.setColor(rgba(75, 75, 75, 0.2))
+
     for i = 0, 7 do
         for j = 0, 3 do
             love.graphics.rectangle("line", i*128, j*128, 128, 128)
         end
     end
 
-	-- Draw rooms ===============================
+	if formats[project.conf.format].isrom then
+		love.graphics.setColor(rgba(53, 53, 53, 1))
+		love.graphics.rectangle("fill", 0, 128*4, 128*8, 128*4)
+    	love.graphics.setColor(rgba(75, 75, 75, 0.2))
+
+		for i = 0, 7 do
+			for j = 4, 7 do
+				love.graphics.rectangle("line", i*128, j*128, 128, 128)
+			end
+		end
+	end
+
+	-- Draw rooms
     for n, room in ipairs(project.rooms) do
         if room ~= activeRoom() then
-            drawRoom(room, p8data)
+            drawRoom(room, p8data, false, rgba(255, 255, 255, 1))
             love.graphics.setColor(0.5, 0.5, 0.5, 0.4)
             love.graphics.rectangle("fill", room.x, room.y, room.w*8, room.h*8)
 

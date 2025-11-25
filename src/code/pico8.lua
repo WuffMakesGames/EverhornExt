@@ -437,10 +437,8 @@ function savepico8(filename)
 	inject("(%-%-@begin.*levels%s*=%s*){.-}(.*%-%-@end)","%1"..dumplua(levels).."%2")
     
 	-- Map data
-	if isrom then
-		
-	else
-		-- This is done in a function instead of a string with references, in order to avoid having to escape special chars in the mapdata
+	-- This is done in a function instead of a string with references, in order to avoid having to escape special chars in the mapdata
+	if not isrom then
 		inject("(%-%-@begin.*mapdata%s*=%s*){.-\n}(.*%-%-@end)", function(a,b) return a..dumplua(mapdata)..b end )
 	end
 
@@ -458,6 +456,13 @@ function savepico8(filename)
     file = io.open(filename, "wb")
     file:write(cartdata)
     file:close()
+
+	-- Save ROM mapdata
+	if isrom then
+		file = io.open(filename..".rom", "wb")
+		file:write("testtestinging ")
+		file:close()
+	end
 
 	return true
 end

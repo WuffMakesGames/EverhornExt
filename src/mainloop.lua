@@ -217,17 +217,17 @@ function love.draw()
         end
     end
 
-	if formats[project.conf.format].isrom then
-		love.graphics.setColor(rgba(53, 53, 53, 1))
-		love.graphics.rectangle("fill", 0, 128*4, 128*8, 128*4)
-    	love.graphics.setColor(rgba(75, 75, 75, 0.2))
+	-- if formats[project.conf.format].isrom then
+	-- 	love.graphics.setColor(rgba(53, 53, 53, 1))
+	-- 	love.graphics.rectangle("fill", 0, 128*4, 128*8, 128*4)
+    -- 	love.graphics.setColor(rgba(75, 75, 75, 0.2))
 
-		for i = 0, 7 do
-			for j = 4, 7 do
-				love.graphics.rectangle("line", i*128, j*128, 128, 128)
-			end
-		end
-	end
+	-- 	for i = 0, 7 do
+	-- 		for j = 4, 7 do
+	-- 			love.graphics.rectangle("line", i*128, j*128, 128, 128)
+	-- 		end
+	-- 	end
+	-- end
 
 	-- Draw rooms
     for n, room in ipairs(project.rooms) do

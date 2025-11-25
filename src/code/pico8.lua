@@ -459,8 +459,14 @@ function savepico8(filename)
 
 	-- Save ROM mapdata
 	if isrom then
+		local out = ""
+		for y = 0,63 do
+			for x = 0,127 do
+				out = out..string.char(raw_map[x][y])
+			end
+		end
 		file = io.open(filename..".rom", "wb")
-		file:write("testtestinging ")
+		file:write(out)
 		file:close()
 	end
 

@@ -203,6 +203,7 @@ function printbg(text, x, y, fgcol, bgcol, centerx, centery)
 end
 
 -- STRINGS
+function string.split_path(path) return path:match("(.-)([^\\/]-([^\\/%.]+))$") end
 function string.get_filename(path) return path:match("(.+)%.[^.]+$") end
 function string.get_extension(path) return path:match("[^.]+$") end
 

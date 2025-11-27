@@ -24,12 +24,14 @@ return function()
 
 		-- Appdata ==================================
 		executable_path = love.filesystem.read("executable_path") or "",
+		carts_path = love.filesystem.read("carts_path") or "",
 
 		-- Options ==================================
 		showToolPanel = true,
 		showExtraTiles=false,
 		showGarbageTiles=false,
 		showCameraTriggers=true,
+		showOtherRooms=true,
 
 		-- History (undo stack) =====================
 		history = {},

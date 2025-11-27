@@ -22,6 +22,11 @@ function tool:panel()
         end
     end
 
+	-- Config
+    -- ui:layoutRow("dynamic", 25*global_scale, 1)
+    -- app.showOtherRooms = ui:checkbox("Show both string/map rooms while editing", app.showOtherRooms)
+
+	-- Parameters
     local room = activeRoom()
     if room then
         local param_n = math.max(#project.conf.param_names,#room.params)

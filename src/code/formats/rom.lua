@@ -10,6 +10,7 @@ local emptyline_map = "000000000000000000000000000000000000000000000000000000000
 -- Loads hex 
 function format.load(gfx,map)
 	local raw_map = table_2d(128,128,0)
+	print(gfx, map)
 
 	-- Load mapdata
 	for x = 0, 127 do
@@ -22,17 +23,29 @@ function format.load(gfx,map)
 			raw_map[x][y] = fromhex_swapnibbles(hex)
 		end
 		for y = 64,95 do
-			local line = map and map[y+1] or emptyline_map
+			local line = map and map[y-63] or emptyline_map
 			local hex = string.sub(line, x*2+1, x*2+2)
 			raw_map[x][y] = fromhex(hex)
 		end
 	end
 
 	-- Create rooms
+	local rooms = {}
+	for y = 0,5 do
+		for x = 0,7 do
+			local room = newRoom(x*128, y*128, 16, 16)
+			room.is_string = true
+			for tx = 0,15 do
+				for ty = 0,15 do
+					room.data[tx][ty] = raw_map[x*16+tx][y*16+ty]
+				end
+			end
+			table.insert(rooms, room)
+		end
+	end
 
 	-- Return
-	print("hi")
-	return {}
+	return rooms
 end
 
 -- Converts mapdata to hex data
@@ -45,7 +58,6 @@ function format.dump(rooms)
 	-- Flatten roomdata
 	local raw_map = table_2d(128,128,0)
 	for i,room in ipairs(rooms) do
-		print(i, room)
 		if room.is_string then
 			local left,top = div8(room.x), div8(room.y)
 			for x = 0,room.w-1 do

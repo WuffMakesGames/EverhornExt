@@ -232,7 +232,12 @@ function love.draw()
 	-- Draw rooms
     for n, room in ipairs(project.rooms) do
         if room ~= activeRoom() then
-            drawRoom(room, p8data, false, rgba(255, 255, 255, 1))
+			local col = rgba(255, 255, 255, 1)
+            if activeRoom() and activeRoom().is_string ~= room.is_string then
+				col = rgba(255, 255, 255, 0.32)
+			end
+			
+			drawRoom(room, p8data, false, col)
             love.graphics.setColor(0.5, 0.5, 0.5, 0.4)
             love.graphics.rectangle("fill", room.x, room.y, room.w*8, room.h*8)
 

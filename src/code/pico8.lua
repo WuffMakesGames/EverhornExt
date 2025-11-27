@@ -249,8 +249,11 @@ function loadpico8(filename)
 	-- Load ROM mapdata
 	local format = formats[data.conf.format]
 	if format and format.isrom then
-		for i,room in ipairs(format.load(sections.gfx, sections.map)) do
-			table.insert(data.rooms, room)
+		local romdata = loadpico8(string.get_filename(filename)..".map")
+		if romdata then
+			for i,room in ipairs(format.load(romdata.sections.gfx, romdata.sections.map)) do
+				if not roomIsEmpty(room) then table.insert(data.rooms, room) end
+			end
 		end
 	end
 
@@ -295,6 +298,7 @@ function loadpico8(filename)
 	end
 
 	-- Return
+	data.sections = sections
 	return data
 end
 

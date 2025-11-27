@@ -59,12 +59,24 @@ function love.keypressed(key, scancode, isrepeat)
     end
 
 	-- Test project [f5] ========================
-	-- if key == "f5" then
-	-- 	savepico8("tempfile.p8")
-	-- 	love.filesystem.write("executable_path", app.executable_path)
-	-- 	local path = '"'..app.executable_path..'"'
-	-- 	io.popen(path.." -run ".."tempfile.p8")
-	-- end
+	if key == "f5" and app.openFileName then
+		-- local filename = ({string.split_path(app.openFileName)})[2]
+		-- local save_path = app.carts_path .. "/__everhorn_ext/" .. filename
+
+		-- local command = '"'..app.executable_path..'"'
+		-- local args = " - run " .. '"__everhorn_ext/'..filename..'"'
+
+		-- love.filesystem.write("executable_path", app.executable_path)
+		-- love.filesystem.write("carts_path", app.carts_path)
+
+		-- os.execute("cd "..app.carts_path)
+		-- print(os.execute("cd"))
+		
+		-- lfs.mkdir('"'..app.carts_path..'/__everhorn_ext"')
+		-- print(command..args)
+		-- savepico8(save_path)
+		-- io.popen(command..args)
+	end
 
     -- non-repeatable global shortcuts
     if love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl") then

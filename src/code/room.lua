@@ -59,7 +59,7 @@ function drawRoom(room, p8data, highlight, tilecolor)
 
 	-- Draw tilemap
 	local spritesheet = app.showGarbageTiles and p8data.spritesheet_alt or p8data.spritesheet
-	love.graphics.setColor(rgb(255, 255, 255))
+	love.graphics.setColor(tilecolor)
 	for x = 0, room.w - 1 do
 		for y = 0, room.h - 1 do
 			local tile = room.data[x][y]

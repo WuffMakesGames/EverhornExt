@@ -202,6 +202,10 @@ function printbg(text, x, y, fgcol, bgcol, centerx, centery)
     love.graphics.print(text, x, y)
 end
 
+-- STRINGS
+function string.get_filename(path) return path:match("(.+)%.[^.]+$") end
+function string.get_extension(path) return path:match("[^.]+$") end
+
 -- TABLES 
 function table_pos(table,v)
 	for i,item in ipairs(table) do

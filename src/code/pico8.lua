@@ -246,6 +246,14 @@ function loadpico8(filename)
 		end
 	end
 
+	-- Load ROM mapdata
+	local format = formats[data.conf.format]
+	if format and format.isrom then
+		for i,room in ipairs(format.load(sections.gfx, sections.map)) do
+			table.insert(data.rooms, room)
+		end
+	end
+
 	-- Load mapdata from PICO-8
 	for i,room in ipairs(data.rooms) do
 		if not room.is_string then
@@ -459,14 +467,8 @@ function savepico8(filename)
 
 	-- Save ROM mapdata
 	if isrom then
-		local out = ""
-		for y = 0,63 do
-			for x = 0,127 do
-				out = out..string.char(raw_map[x][y])
-			end
-		end
-		file = io.open(filename..".rom", "wb")
-		file:write(out)
+		file = io.open(string.get_filename(filename)..".map", "wb")
+		file:write(formats[project.conf.format].dump(project.rooms))
 		file:close()
 	end
 

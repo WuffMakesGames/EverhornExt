@@ -153,6 +153,14 @@ function _loadpico8(filename)
             levels, mapdata, camera_offsets = env.levels, env.mapdata, env.camera_offsets or env.triggers
         end
     end
+
+    -- Set levels from conf if none found
+    if data.conf.backup then
+	    camera_offsets = camera_offsets or data.conf.backup.camera_offsets
+	   	mapdata = mapdata or data.conf.backup.mapdata
+	   	levels = levels or data.conf.backup.levels
+    end
+
     -- parameter names default to none
 	if data.conf.include_exits == nil then data.conf.include_exits = true end
     data.conf.param_names = data.conf.param_names or {}
@@ -225,7 +233,7 @@ function _loadpico8(filename)
 					room.is_string=true
 				end
 			end
-		
+
 		-- Assume format (hex or base256)
 		else
 			data.conf.format = export_hex.name
@@ -243,7 +251,7 @@ function _loadpico8(filename)
 			end
 		end
 	end
-	
+
     -- fill rooms with no mapdata from p8 map
     for n, room in ipairs(data.rooms) do
         if not room.is_string then
@@ -377,6 +385,13 @@ function _savepico8(filename)
 			camera_offsets[n] = camera_offsets[n]:sub(1,#camera_offsets[n]-1)
         end
     end
+
+    -- save data to conf
+    project.conf.backup = {
+    	levels=levels,
+    	mapdata=mapdata,
+     	camera_offsets=camera_offsets,
+    }
 
     -- map section
     -- start out by making sure both sections exist, and are sized to max size
@@ -533,7 +548,6 @@ function saveFile(as)
 
     if filename and savepico8(filename) then
         showMessage("Saved "..string.match(filename, "/([^/]*)$"))
-
         app.saveFileName = filename
     else
         showMessage("Failed to save cart")

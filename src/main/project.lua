@@ -10,6 +10,11 @@ return function()
 			param_names = {},
 			autotiles = {},
 			backgrounds = {},
+			backup = {
+				levels = {},
+				mapdata = {},
+				camera_offsets = {},
+			}
 		},
 	}
 end
